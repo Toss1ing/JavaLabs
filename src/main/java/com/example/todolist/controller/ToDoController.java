@@ -23,7 +23,7 @@ public class ToDoController {
     }
 
     @GetMapping(path = "/item/{id}")
-    public ToDoItem getToDOItemById(@PathVariable Integer id){
+    public ToDoItem getToDoItemById(@PathVariable Integer id){
         return toDoService.getToDoItemById(id);
     }
 
