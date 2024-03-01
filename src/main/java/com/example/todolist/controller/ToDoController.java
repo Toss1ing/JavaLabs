@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping(path = "/api/v1/todo")
 @AllArgsConstructor
@@ -18,13 +19,11 @@ public class ToDoController {
     private final ToDoService toDoService;
 
     @GetMapping("/items")
-    public List<ToDoItem> getTasks(){
+    public List<ToDoItem> getToDoItems(){
         return toDoService.getToDoItems();
     }
 
     @GetMapping(path = "/item/{id}")
-    public ToDoItem getToDoItemById(@PathVariable Integer id){
-        return toDoService.getToDoItemById(id);
-    }
+    public ToDoItem getToDoItemById(@PathVariable Integer id){ return toDoService.getToDoItemById(id); }
 
 }
