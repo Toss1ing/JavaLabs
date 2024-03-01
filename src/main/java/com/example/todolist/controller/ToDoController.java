@@ -18,7 +18,7 @@ public class ToDoController {
 
     private final ToDoService toDoService;
 
-    @GetMapping("/items")
+    @GetMapping(path = "/items")
     public List<ToDoItem> getToDoItems(){
         return toDoService.getToDoItems();
     }
