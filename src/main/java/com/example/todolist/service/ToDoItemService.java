@@ -1,9 +1,9 @@
 package com.example.todolist.service;
 
 import com.example.todolist.cache.CacheService;
-import com.example.todolist.exeption.BadRequestException;
-import com.example.todolist.exeption.ObjectExistException;
-import com.example.todolist.exeption.ObjectNotFoundException;
+import com.example.todolist.exception.BadRequestException;
+import com.example.todolist.exception.ObjectExistException;
+import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.ToDoItem;
 import com.example.todolist.repository.ToDoItemRepository;
 
@@ -45,7 +45,9 @@ public class ToDoItemService {
         if(cacheService.containsKey(hash)){
             logger.info("Found task with id " + id + " in hashMap");
             item = cacheService.get(hash);
-            return item.get();
+            if(item.isPresent()){
+                return item.get();
+            }
         }
         item = toDoItemRepository.findById(id);
         if(item.isEmpty()){

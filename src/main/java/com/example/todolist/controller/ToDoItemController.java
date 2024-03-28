@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.todolist.exeption.BadRequestException;
-import com.example.todolist.exeption.ObjectExistException;
-import com.example.todolist.exeption.ObjectNotFoundException;
+import com.example.todolist.exception.BadRequestException;
+import com.example.todolist.exception.ObjectExistException;
+import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.ToDoItem;
 import com.example.todolist.service.ToDoItemService;
 

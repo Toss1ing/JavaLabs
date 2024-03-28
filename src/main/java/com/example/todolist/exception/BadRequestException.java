@@ -1,4 +1,4 @@
-package com.example.todolist.exeption;
+package com.example.todolist.exception;
 
 public class BadRequestException extends Exception {
 

@@ -1,8 +1,8 @@
 package com.example.todolist.controller;
 
-import com.example.todolist.exeption.BadRequestException;
-import com.example.todolist.exeption.ObjectExistException;
-import com.example.todolist.exeption.ObjectNotFoundException;
+import com.example.todolist.exception.BadRequestException;
+import com.example.todolist.exception.ObjectExistException;
+import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.ToDoUser;
 import com.example.todolist.service.ToDoUserService;
 

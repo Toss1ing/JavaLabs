@@ -1,9 +1,9 @@
 package com.example.todolist.service;
 
 import com.example.todolist.cache.CacheService;
-import com.example.todolist.exeption.BadRequestException;
-import com.example.todolist.exeption.ObjectExistException;
-import com.example.todolist.exeption.ObjectNotFoundException;
+import com.example.todolist.exception.BadRequestException;
+import com.example.todolist.exception.ObjectExistException;
+import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.ToDoItem;
 import com.example.todolist.model.ToDoUser;
 import com.example.todolist.repository.ToDoItemRepository;
@@ -48,7 +48,9 @@ public class ToDoUserService {
         if(cacheService.containsKey(hash)){
             logger.info("Searching user in hashMap");
             user = cacheService.get(hash);
-            return user.get();
+            if(user.isPresent()){
+                return user.get();
+            }
         }
         user = toDoUserRepository.findById(id);
         if(user.isEmpty()){
@@ -89,7 +91,6 @@ public class ToDoUserService {
     }
 
     public ToDoUser addUser(ToDoUser toDoUser) throws ObjectExistException {
-        //need to add hashing process
         Optional<ToDoUser> user = toDoUserRepository.findByName(toDoUser.getLoginName());
         if(user.isPresent()){
             throw new ObjectExistException("User with name " + toDoUser.getLoginName() + " is existed");
