@@ -29,7 +29,6 @@ public class ToDoUserService {
 
     CacheService<Integer,Optional<ToDoUser>> cacheService;
 
-
     public List<ToDoUser> getToDoUser() throws ObjectNotFoundException {
         List <ToDoUser> users = toDoUserRepository.findAll();
         if(users.isEmpty()){
@@ -49,7 +48,7 @@ public class ToDoUserService {
         }
         user = toDoUserRepository.findById(id);
         if(user.isEmpty()){
-            throw new ObjectNotFoundException("Object with id " + id + " is not founded");
+            throw new ObjectNotFoundException(id.toString());
         }
         cacheService.put(hash, user);
         return user.get();
@@ -58,7 +57,7 @@ public class ToDoUserService {
     public ToDoUser getToDoUserByName(String userName) throws ObjectNotFoundException {
         Optional<ToDoUser> user =  toDoUserRepository.findByName(userName);
         if(user.isEmpty()){
-            throw new ObjectNotFoundException("User with name " + userName + " is not founded");
+            throw new ObjectNotFoundException(userName);
         }
         return user.get();
     }
@@ -66,14 +65,13 @@ public class ToDoUserService {
     public void deleteUserById(Integer id) throws BadRequestException{
         Optional<ToDoUser> user = toDoUserRepository.findById(id);
         if(user.isEmpty()){
-            throw new BadRequestException("Bad request user with id " + id + " is not founded");
+            throw new BadRequestException(id.toString());
         }
         Integer hash = Objects.hashCode(id);
         if(cacheService.containsKey(hash)){
             cacheService.remove(hash);
         }
         toDoUserRepository.deleteById(id);
-        return;
     }
     
     public void deleteAllUser() {
@@ -84,7 +82,7 @@ public class ToDoUserService {
     public ToDoUser addUser(ToDoUser toDoUser) throws ObjectExistException {
         Optional<ToDoUser> user = toDoUserRepository.findByName(toDoUser.getLoginName());
         if(user.isPresent()){
-            throw new ObjectExistException("User with name " + toDoUser.getLoginName() + " is existed");
+            throw new ObjectExistException(toDoUser.getLoginName());
         }
         if(toDoUser.getToDoItems() == null){
             toDoUser.setToDoItems(new HashSet<>());
@@ -98,7 +96,7 @@ public class ToDoUserService {
     public ToDoUser addTaskInUserById(String userName, Integer taskId) throws BadRequestException {
         Optional<ToDoUser> user = toDoUserRepository.findByName(userName);
         if(user.isEmpty()){
-            throw new BadRequestException("Can't find user with name " + userName);
+            throw new BadRequestException(userName);
         }        
         Optional<ToDoItem> item = toDoItemRepository.findById(taskId);
         user.get().getToDoItems().add(item.get());
@@ -114,11 +112,11 @@ public class ToDoUserService {
     public void deleteTaskByIdInUser(Integer userId, Integer taskId) throws BadRequestException {
         Optional<ToDoUser> user = toDoUserRepository.findById(userId);
         if(user.isEmpty()){
-            throw new BadRequestException("Can't find user with id " + userId );
+            throw new BadRequestException(userId.toString());
         }
         Optional<ToDoItem> item = toDoItemRepository.findById(taskId);
         if(item.isEmpty()){
-            throw new BadRequestException("Can't find task with id " + taskId);
+            throw new BadRequestException(taskId.toString());
         }
         user.get().getToDoItems().remove(item.get());
         toDoUserRepository.save(user.get());
@@ -127,7 +125,7 @@ public class ToDoUserService {
     public void updateUserNameById(Integer userId, String newName) throws BadRequestException {
         Optional<ToDoUser> user = toDoUserRepository.findById(userId);
         if(user.isEmpty()){
-            throw new BadRequestException("User with id " + userId + " is not founded");
+            throw new BadRequestException(userId.toString());
         }
         user.get().setLoginName(newName);
         if(cacheService.containsKey(userId)){
@@ -140,7 +138,7 @@ public class ToDoUserService {
     public List<ToDoUser> getUsersWithTaskById(Integer taskId) throws ObjectNotFoundException {
         List<ToDoUser> usersByTaskId = toDoUserRepository.findUserWithTaskById(taskId);
         if(usersByTaskId.isEmpty()){
-            throw new ObjectNotFoundException("Users with task id " + taskId + " is not founded");
+            throw new ObjectNotFoundException(taskId.toString());
         }
         return usersByTaskId;
     }

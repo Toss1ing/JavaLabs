@@ -26,7 +26,6 @@ public class ToDoItemService {
 
     CacheService<Integer,Optional<ToDoItem>> cacheService;
 
-
     public List<ToDoItem> getToDoItems() throws ObjectNotFoundException {
         List<ToDoItem> items = toDoItemRepository.findAll();
         if(items.isEmpty()){
@@ -46,7 +45,7 @@ public class ToDoItemService {
         }
         item = toDoItemRepository.findById(id);
         if(item.isEmpty()){
-            throw new ObjectNotFoundException("Task with id " + id + " is not founded");
+            throw new ObjectNotFoundException(id.toString());
         }
         return item.get();
     }
@@ -54,7 +53,7 @@ public class ToDoItemService {
     public ToDoItem getToDoItemByName(String taskName) throws ObjectNotFoundException {
         Optional<ToDoItem> item = toDoItemRepository.findByName(taskName);
         if(item.isEmpty()){
-            throw new ObjectNotFoundException("Object with task name " + taskName + " not founded");
+            throw new ObjectNotFoundException(taskName);
         }
         return item.get();
     }
@@ -62,7 +61,7 @@ public class ToDoItemService {
     public ToDoItem save(ToDoItem toDoItem) throws ObjectExistException {
         Optional<ToDoItem> item = toDoItemRepository.findByName(toDoItem.getNameTask());
         if(item.isPresent()){
-            throw new ObjectExistException("Tasks with name " + toDoItem.getNameTask() + " is existed");
+            throw new ObjectExistException(toDoItem.getNameTask());
         } 
         if(toDoItem.getUsers() == null){
             toDoItem.setUsers(new ArrayList<>());
@@ -74,7 +73,7 @@ public class ToDoItemService {
 
     public void deleteToDoItemById(Integer id) throws BadRequestException {
         if(toDoItemRepository.findById(id).isEmpty()){
-            throw new BadRequestException("Can't find item with id " + id + " is not founded");
+            throw new BadRequestException(id.toString());
         }
         Integer hash = Objects.hashCode(id);
         cacheService.remove(hash);
@@ -89,7 +88,7 @@ public class ToDoItemService {
     public void completeTaskById(Integer taskId) throws BadRequestException {
         Optional<ToDoItem> item = toDoItemRepository.findById(taskId);
         if(item.isEmpty()){
-            throw new BadRequestException("Task with id " + taskId + "is not founded");
+            throw new BadRequestException(taskId.toString());
         }
         item.get().setComplete(true);
         item.get().setCompletionDate(Instant.now());
@@ -99,7 +98,7 @@ public class ToDoItemService {
     public List<ToDoItem> getToDoItemByWord(String keyWord) throws ObjectNotFoundException {
         List<ToDoItem> listItemByWord = toDoItemRepository.findByDescriptionTask(keyWord);
         if(listItemByWord.isEmpty()){
-            throw new ObjectNotFoundException("Tasks with string in description" + keyWord + " is not founded");
+            throw new ObjectNotFoundException(keyWord);
         }
         return listItemByWord;
     }
