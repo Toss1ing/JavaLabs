@@ -12,19 +12,19 @@ public class ExceptionAdvice {
 
 
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<Response> ObjectNotFoundException(ObjectNotFoundException ex){
+    public ResponseEntity<Response> objectNotFoundException(ObjectNotFoundException ex){
         Response response = new Response(ex.getMessage());
         return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Response> BadRequestException(BadRequestException ex){
+    public ResponseEntity<Response> badRequestException(BadRequestException ex){
         Response response = new Response(ex.getMessage());
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ObjectExistException.class)
-    public ResponseEntity<Response> ObjectExistException(ObjectExistException ex) {
+    public ResponseEntity<Response> objectExistException(ObjectExistException ex) {
         Response response = new Response(ex.getMessage());
         return new ResponseEntity<>(response,HttpStatus.CONFLICT);
     }
