@@ -9,8 +9,6 @@ import com.example.todolist.repository.ToDoItemRepository;
 
 import lombok.AllArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,14 +26,12 @@ public class ToDoItemService {
 
     CacheService<Integer,Optional<ToDoItem>> cacheService;
 
-    private final Logger logger = LoggerFactory.getLogger(ToDoItemService.class);
 
     public List<ToDoItem> getToDoItems() throws ObjectNotFoundException {
         List<ToDoItem> items = toDoItemRepository.findAll();
         if(items.isEmpty()){
             throw new ObjectNotFoundException("List of tasks not founded");
         }
-        logger.info("List of tasks is founded");
         return toDoItemRepository.findAll();
     }
 
@@ -43,7 +39,6 @@ public class ToDoItemService {
         Integer hash = Objects.hashCode(id);
         Optional<ToDoItem> item;
         if(cacheService.containsKey(hash)){
-            logger.info("Found task with id " + id + " in hashMap");
             item = cacheService.get(hash);
             if(item.isPresent()){
                 return item.get();
@@ -53,7 +48,6 @@ public class ToDoItemService {
         if(item.isEmpty()){
             throw new ObjectNotFoundException("Task with id " + id + " is not founded");
         }
-        logger.info("Task with id " + id + " is founded");
         return item.get();
     }
 
@@ -62,12 +56,10 @@ public class ToDoItemService {
         if(item.isEmpty()){
             throw new ObjectNotFoundException("Object with task name " + taskName + " not founded");
         }
-        logger.info("Object with task name" + taskName + " is founded");
         return item.get();
     }
 
     public ToDoItem save(ToDoItem toDoItem) throws ObjectExistException {
-        //add hashing process
         Optional<ToDoItem> item = toDoItemRepository.findByName(toDoItem.getNameTask());
         if(item.isPresent()){
             throw new ObjectExistException("Tasks with name " + toDoItem.getNameTask() + " is existed");
@@ -84,14 +76,12 @@ public class ToDoItemService {
         if(toDoItemRepository.findById(id).isEmpty()){
             throw new BadRequestException("Can't find item with id " + id + " is not founded");
         }
-        logger.info("Item with id " + id + " is deleted");
         Integer hash = Objects.hashCode(id);
         cacheService.remove(hash);
         toDoItemRepository.deleteById(id);
     }
 
     public void deleteAllItem() {
-        logger.info("All items being deleted");
         cacheService.clear();
         toDoItemRepository.deleteAll();
     }
