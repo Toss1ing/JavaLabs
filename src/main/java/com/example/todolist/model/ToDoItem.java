@@ -1,15 +1,19 @@
 package com.example.todolist.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.Instant;
-import java.util.Set;
+import java.util.List;
+
 
 
 @Entity
 @Data
+@Getter
 public class ToDoItem {
     @Id
     private Integer id;
@@ -23,6 +27,6 @@ public class ToDoItem {
 
     @ManyToMany(mappedBy = "toDoItems")
     @JsonIgnore
-    private Set<ToDoUser> users;
+    private List<ToDoUser> users;
 
 }
