@@ -28,10 +28,10 @@ public class ToDoUserGroupService {
     
     CacheService<Integer, Optional<ToDoUserGroup>> cacheService;
 
-    private static final Integer allContains = 1111;
+    private static final Integer ALL_CONTAINS = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(allContains)){
+        if(cacheService.containsKey(ALL_CONTAINS)){
             List<ToDoUserGroup> toDoUserGroups = toDoUserGroupRepository.findAll();
             for(ToDoUserGroup group: toDoUserGroups){
                 if(cacheService.containsKey(group.getId())){
@@ -39,7 +39,7 @@ public class ToDoUserGroupService {
                     cacheService.put(hash, Optional.of(group));
                 }
             }
-            cacheService.put(allContains, null);
+            cacheService.put(ALL_CONTAINS, null);
         }
     }
 

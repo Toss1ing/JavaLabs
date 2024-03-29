@@ -26,10 +26,10 @@ public class ToDoItemService {
 
     CacheService<Integer,Optional<ToDoItem>> cacheService;
 
-    private static final Integer allContains = 1111;
+    private static final Integer ALL_CONTAINS = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(allContains)){
+        if(cacheService.containsKey(ALL_CONTAINS)){
             List<ToDoItem> toDoItems = toDoItemRepository.findAll();
             for(ToDoItem item: toDoItems){
                 if(cacheService.containsKey(item.getId())){
@@ -37,7 +37,7 @@ public class ToDoItemService {
                     cacheService.put(hash, Optional.of(item));
                 }
             }
-            cacheService.put(allContains, null);
+            cacheService.put(ALL_CONTAINS, null);
         }
     }
 

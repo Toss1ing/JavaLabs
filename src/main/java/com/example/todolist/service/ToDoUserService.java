@@ -29,10 +29,10 @@ public class ToDoUserService {
 
     CacheService<Integer,Optional<ToDoUser>> cacheService;
 
-    private static final Integer allContains = 1111;
+    private static final Integer ALL_CONTAINS = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(allContains)){
+        if(cacheService.containsKey(ALL_CONTAINS)){
             List<ToDoUser> toDoUsers = toDoUserRepository.findAll();
             for(ToDoUser user: toDoUsers){
                 if(cacheService.containsKey(user.getId())){
@@ -40,7 +40,7 @@ public class ToDoUserService {
                     cacheService.put(hash, Optional.of(user));
                 }
             }
-            cacheService.put(allContains, null);
+            cacheService.put(ALL_CONTAINS, null);
         }
     }
 
