@@ -28,7 +28,7 @@ public class ToDoUserGroupService {
     
     CacheService<Integer, Optional<ToDoUserGroup>> cacheService;
 
-    private final Integer allContains = 1111;
+    private final static Integer allContains = 1111;
 
     private void updateCacheService(){
         if(cacheService.containsKey(allContains) == false){

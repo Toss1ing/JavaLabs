@@ -29,7 +29,7 @@ public class ToDoUserService {
 
     CacheService<Integer,Optional<ToDoUser>> cacheService;
 
-    private final Integer allContains = 1111;
+    private final static Integer allContains = 1111;
 
     private void updateCacheService(){
         if(cacheService.containsKey(allContains) == false){
