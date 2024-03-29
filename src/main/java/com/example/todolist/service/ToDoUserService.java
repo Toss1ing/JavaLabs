@@ -29,7 +29,23 @@ public class ToDoUserService {
 
     CacheService<Integer,Optional<ToDoUser>> cacheService;
 
+    private final Integer allContains = 1111;
+
+    private void updateCacheService(){
+        if(cacheService.containsKey(allContains) == false){
+            List<ToDoUser> toDoUsers = toDoUserRepository.findAll();
+            for(ToDoUser user: toDoUsers){
+                if(cacheService.containsKey(user.getId()) == false){
+                    int hash = Objects.hash(user.getId());
+                    cacheService.put(hash, Optional.of(user));
+                }
+            }
+        }
+        cacheService.put(allContains, null);
+    }
+
     public List<ToDoUser> getToDoUser() throws ObjectNotFoundException {
+        updateCacheService();
         List <ToDoUser> users = toDoUserRepository.findAll();
         if(users.isEmpty()){
             throw new ObjectNotFoundException("List of users is not founded");
@@ -42,15 +58,14 @@ public class ToDoUserService {
         Optional<ToDoUser> user;
         if(cacheService.containsKey(hash)){
             user = cacheService.get(hash);
-            if(user.isPresent()){
-                return user.get();
-            }
         }
-        user = toDoUserRepository.findById(id);
+        else{
+            user = toDoUserRepository.findById(id);
+            cacheService.put(hash, user);
+        }
         if(user.isEmpty()){
             throw new ObjectNotFoundException(id.toString());
         }
-        cacheService.put(hash, user);
         return user.get();
     }
 
@@ -63,11 +78,17 @@ public class ToDoUserService {
     }
         
     public void deleteUserById(Integer id) throws BadRequestException{
-        Optional<ToDoUser> user = toDoUserRepository.findById(id);
+        Optional<ToDoUser> user;
+        Integer hash = Objects.hash(id);
+        if(cacheService.containsKey(hash)){
+            user = cacheService.get(hash);
+        }
+        else{
+            user = toDoUserRepository.findById(id);
+        }
         if(user.isEmpty()){
             throw new BadRequestException(id.toString());
         }
-        Integer hash = Objects.hashCode(id);
         if(cacheService.containsKey(hash)){
             cacheService.remove(hash);
         }
@@ -110,7 +131,14 @@ public class ToDoUserService {
 
     @Transactional
     public void deleteTaskByIdInUser(Integer userId, Integer taskId) throws BadRequestException {
-        Optional<ToDoUser> user = toDoUserRepository.findById(userId);
+        Optional<ToDoUser> user;
+        Integer hash = Objects.hash(userId);
+        if(cacheService.containsKey(hash)){
+            user = cacheService.get(hash);
+        }
+        else{
+            user = toDoUserRepository.findById(userId);
+        }
         if(user.isEmpty()){
             throw new BadRequestException(userId.toString());
         }
@@ -119,11 +147,22 @@ public class ToDoUserService {
             throw new BadRequestException(taskId.toString());
         }
         user.get().getToDoItems().remove(item.get());
+        if(cacheService.containsKey(hash)){
+            cacheService.remove(hash);
+        }
+        cacheService.put(hash, user);
         toDoUserRepository.save(user.get());
     }
 
     public void updateUserNameById(Integer userId, String newName) throws BadRequestException {
-        Optional<ToDoUser> user = toDoUserRepository.findById(userId);
+        Optional<ToDoUser> user;
+        Integer hash = Objects.hash(userId);
+        if(cacheService.containsKey(hash)){
+            user = cacheService.get(hash);
+        }
+        else{
+            user = toDoUserRepository.findById(userId);
+        }
         if(user.isEmpty()){
             throw new BadRequestException(userId.toString());
         }

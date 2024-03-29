@@ -4,16 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 
 import java.time.Instant;
 import java.util.List;
 
 
-
 @Entity
 @Data
-@Getter
+@Table(name = "to_do_item")
 public class ToDoItem {
     @Id
     private Integer id;

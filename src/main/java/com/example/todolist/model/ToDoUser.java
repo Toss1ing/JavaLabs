@@ -26,7 +26,11 @@ public class ToDoUser {
                     @JoinColumn(name = "item_id",referencedColumnName = "id")
             }
     )
-
     private Set<ToDoItem> toDoItems;
+
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    private ToDoUserGroup toDoUserGroup;
 }
 

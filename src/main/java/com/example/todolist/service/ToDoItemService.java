@@ -26,7 +26,23 @@ public class ToDoItemService {
 
     CacheService<Integer,Optional<ToDoItem>> cacheService;
 
+    private final Integer allContains = 1111;
+
+    private void updateCacheService(){
+        if(cacheService.containsKey(allContains) == false){
+            List<ToDoItem> toDoItems = toDoItemRepository.findAll();
+            for(ToDoItem item: toDoItems){
+                if(cacheService.containsKey(item.getId()) == false){
+                    int hash = Objects.hash(item.getId());
+                    cacheService.put(hash, Optional.of(item));
+                }
+            }
+        }
+        cacheService.put(allContains, null);
+    }
+
     public List<ToDoItem> getToDoItems() throws ObjectNotFoundException {
+        updateCacheService();
         List<ToDoItem> items = toDoItemRepository.findAll();
         if(items.isEmpty()){
             throw new ObjectNotFoundException("List of tasks not founded");
@@ -39,11 +55,11 @@ public class ToDoItemService {
         Optional<ToDoItem> item;
         if(cacheService.containsKey(hash)){
             item = cacheService.get(hash);
-            if(item.isPresent()){
-                return item.get();
-            }
         }
-        item = toDoItemRepository.findById(id);
+        else{
+            item = toDoItemRepository.findById(id);
+            cacheService.put(hash, item);
+        }
         if(item.isEmpty()){
             throw new ObjectNotFoundException(id.toString());
         }
@@ -76,7 +92,9 @@ public class ToDoItemService {
             throw new BadRequestException(id.toString());
         }
         Integer hash = Objects.hashCode(id);
-        cacheService.remove(hash);
+        if(cacheService.containsKey(hash)){
+            cacheService.remove(hash);
+        }
         toDoItemRepository.deleteById(id);
     }
 
@@ -86,12 +104,23 @@ public class ToDoItemService {
     }
 
     public void completeTaskById(Integer taskId) throws BadRequestException {
-        Optional<ToDoItem> item = toDoItemRepository.findById(taskId);
+        Optional<ToDoItem> item;
+        Integer hash = Objects.hash(taskId);
+        if(cacheService.containsKey(hash)){
+            item = cacheService.get(hash);
+        }
+        else{
+            item = toDoItemRepository.findById(taskId);
+        }
         if(item.isEmpty()){
             throw new BadRequestException(taskId.toString());
         }
         item.get().setComplete(true);
         item.get().setCompletionDate(Instant.now());
+        if(cacheService.containsKey(hash)){
+            cacheService.remove(hash);
+        }
+        cacheService.put(hash, item);
         toDoItemRepository.save(item.get());
     }
 
