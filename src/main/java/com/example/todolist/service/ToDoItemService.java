@@ -37,8 +37,8 @@ public class ToDoItemService {
                     cacheService.put(hash, Optional.of(item));
                 }
             }
+            cacheService.put(allContains, null);
         }
-        cacheService.put(allContains, null);
     }
 
     public List<ToDoItem> getToDoItems() throws ObjectNotFoundException {

@@ -31,16 +31,16 @@ public class ToDoUserGroupService {
     private final static Integer allContains = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(allContains) == false){
+        if(cacheService.containsKey(allContains)){
             List<ToDoUserGroup> toDoUserGroups = toDoUserGroupRepository.findAll();
             for(ToDoUserGroup group: toDoUserGroups){
-                if(cacheService.containsKey(group.getId()) == false){
+                if(cacheService.containsKey(group.getId())){
                     int hash = Objects.hash(group.getId());
                     cacheService.put(hash, Optional.of(group));
                 }
             }
+            cacheService.put(allContains, null);
         }
-        cacheService.put(allContains, null);
     }
 
     public List<ToDoUserGroup> getAllUserGroup() throws ObjectNotFoundException{

@@ -32,16 +32,16 @@ public class ToDoUserService {
     private final static Integer allContains = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(allContains) == false){
+        if(cacheService.containsKey(allContains)){
             List<ToDoUser> toDoUsers = toDoUserRepository.findAll();
             for(ToDoUser user: toDoUsers){
-                if(cacheService.containsKey(user.getId()) == false){
+                if(cacheService.containsKey(user.getId())){
                     int hash = Objects.hash(user.getId());
                     cacheService.put(hash, Optional.of(user));
                 }
             }
+            cacheService.put(allContains, null);
         }
-        cacheService.put(allContains, null);
     }
 
     public List<ToDoUser> getToDoUser() throws ObjectNotFoundException {
