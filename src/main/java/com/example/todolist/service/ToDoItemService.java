@@ -26,7 +26,7 @@ public class ToDoItemService {
 
     CacheService<Integer,Optional<ToDoItem>> cacheService;
 
-    private final static Integer allContains = 1111;
+    private static final Integer allContains = 1111;
 
     private void updateCacheService(){
         if(cacheService.containsKey(allContains)){
