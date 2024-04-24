@@ -17,48 +17,56 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.todolist.exception.BadRequestException;
 import com.example.todolist.exception.ObjectExistException;
 import com.example.todolist.exception.ObjectNotFoundException;
-import com.example.todolist.model.ToDoUserGroup;
-import com.example.todolist.service.ToDoUserGroupService;
+import com.example.todolist.model.Group;
+import com.example.todolist.service.GroupService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping(path = "api/v1/todo")
 @AllArgsConstructor
-public class ToDoUserGroupController {
+@Tag(name = "Group of users", description = "Direction with group of users")
+public class GroupController {
 
-    ToDoUserGroupService toDoUserGroupService;
+    private final GroupService groupService;
 
     @GetMapping(path = "group")
-    public ResponseEntity<List<ToDoUserGroup>> gerAllUserGroup() throws ObjectNotFoundException{
-        return new ResponseEntity<>(toDoUserGroupService.getAllUserGroup(), HttpStatus.OK);
+    @Operation(summary = "Get groups", description = "Get list of groups")
+    public ResponseEntity<List<Group>> gerAllUserGroup() throws ObjectNotFoundException {
+        return new ResponseEntity<>(groupService.getAllUserGroup(), HttpStatus.OK);
     }
 
     @GetMapping(path = "group/id/{id}")
-    public ResponseEntity<ToDoUserGroup> getUserGroupById(@PathVariable Integer id) throws ObjectNotFoundException{
-        return new ResponseEntity<>(toDoUserGroupService.getUserGroupById(id), HttpStatus.OK);
+    @Operation(summary = "Get group", description = "Get group of user by id")
+    public ResponseEntity<Group> getUserGroupById(@PathVariable Integer id) throws ObjectNotFoundException {
+        return new ResponseEntity<>(groupService.getUserGroupById(id), HttpStatus.OK);
     }
     
     @GetMapping(path = "group/user/id/{id}")
-    public ResponseEntity<ToDoUserGroup> getGroupByUserId(@PathVariable Integer id) throws ObjectNotFoundException{
-        return new ResponseEntity<>(toDoUserGroupService.getGroupByUserId(id), HttpStatus.OK);
+    @Operation(summary = "Get group", description = "Get group of user by user id")
+    public ResponseEntity<Group> getGroupByUserId(@PathVariable Integer id) throws ObjectNotFoundException {
+        return new ResponseEntity<>(groupService.getGroupByUserId(id), HttpStatus.OK);
     }
     
     @PostMapping(path = "group/add")
-    public ResponseEntity<ToDoUserGroup> addGroup(@Validated @RequestBody ToDoUserGroup toDoUserGroup) throws ObjectExistException{
-        return new ResponseEntity<>(toDoUserGroupService.addUserGroup(toDoUserGroup),HttpStatus.CREATED);
+    @Operation(summary = "Add group of user")
+    public ResponseEntity<Group> addGroup(@Validated @RequestBody Group toDoUserGroup) throws ObjectExistException {
+        return new ResponseEntity<>(groupService.addUserGroup(toDoUserGroup),HttpStatus.CREATED);
     }
 
     @PutMapping(path = "group/name/new/{id}")
+    @Operation(summary = "Update group of user")
     public ResponseEntity<HttpStatus> updateGroupNameById(@PathVariable Integer id,@Validated @RequestBody String groupName) throws BadRequestException {
-        toDoUserGroupService.updateUserNameById(id, groupName);
+        groupService.updateUserNameById(id, groupName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @DeleteMapping(path = "group/delete/{id}")
+    @Operation(summary = "Delete group of user", description = "Delete group of user by id")
     public ResponseEntity<HttpStatus> deleteGroupById(@PathVariable Integer id) throws BadRequestException {
-        toDoUserGroupService.deleteGroupById(id);
+        groupService.deleteGroupById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    
 }

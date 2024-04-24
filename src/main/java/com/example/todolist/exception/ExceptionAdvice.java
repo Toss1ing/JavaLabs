@@ -10,23 +10,27 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice()
 public class ExceptionAdvice {
 
-
     @ExceptionHandler(ObjectNotFoundException.class)
-    public ResponseEntity<Response> objectNotFoundException(ObjectNotFoundException ex){
-        Response response = new Response(ex.getMessage());
-        return new ResponseEntity<>(response,HttpStatus.NOT_FOUND);
+    public ResponseEntity<ExceptionResponse> objectNotFoundException(ObjectNotFoundException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Response> badRequestException(BadRequestException ex){
-        Response response = new Response(ex.getMessage());
-        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ExceptionResponse> badRequestException(BadRequestException ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse,HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(ObjectExistException.class)
-    public ResponseEntity<Response> objectExistException(ObjectExistException ex) {
-        Response response = new Response(ex.getMessage());
-        return new ResponseEntity<>(response,HttpStatus.CONFLICT);
+    public ResponseEntity<ExceptionResponse> objectExistException(ObjectExistException ex) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse,HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponse> globalExceptionHandler(Exception ex){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(ex.getMessage());
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

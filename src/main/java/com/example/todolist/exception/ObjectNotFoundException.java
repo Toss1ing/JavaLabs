@@ -1,6 +1,5 @@
 package com.example.todolist.exception;
 
-
 public class ObjectNotFoundException extends Exception {
 
     public ObjectNotFoundException(String message){

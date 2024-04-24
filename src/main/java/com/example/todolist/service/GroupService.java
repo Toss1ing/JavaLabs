@@ -10,30 +10,34 @@ import com.example.todolist.cache.CacheService;
 import com.example.todolist.exception.BadRequestException;
 import com.example.todolist.exception.ObjectExistException;
 import com.example.todolist.exception.ObjectNotFoundException;
-import com.example.todolist.model.ToDoUser;
-import com.example.todolist.model.ToDoUserGroup;
-import com.example.todolist.repository.ToDoUserGroupRepository;
-import com.example.todolist.repository.ToDoUserRepository;
+import com.example.todolist.model.User;
+import com.example.todolist.model.Group;
+import com.example.todolist.repository.GroupRepository;
+import com.example.todolist.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import static com.example.todolist.utilities.Constants.NOT_FOUND_MSG;
+import static com.example.todolist.utilities.Constants.BAD_REQUEST_MSG;
+import static com.example.todolist.utilities.Constants.OBJECT_EXIST_MSG;
+
 @Service
 @AllArgsConstructor
-public class ToDoUserGroupService {
+public class GroupService {
     
-    ToDoUserGroupRepository toDoUserGroupRepository;
+    GroupRepository groupRepository;
 
-    ToDoUserRepository toDoUserRepository;
+    UserRepository userRepository;
     
-    CacheService<Integer, Optional<ToDoUserGroup>> cacheService;
+    CacheService<Integer, Optional<Group>> cacheService;
 
     private static final Integer ALL_CONTAINS = 1111;
 
     private void updateCacheService(){
-        if(cacheService.containsKey(ALL_CONTAINS)){
-            List<ToDoUserGroup> toDoUserGroups = toDoUserGroupRepository.findAll();
-            for(ToDoUserGroup group: toDoUserGroups){
+        if(!cacheService.containsKey(ALL_CONTAINS)){
+            List<Group> userGroups = groupRepository.findAll();
+            for(Group group: userGroups){
                 if(cacheService.containsKey(group.getId())){
                     int hash = Objects.hash(group.getId());
                     cacheService.put(hash, Optional.of(group));
@@ -43,90 +47,89 @@ public class ToDoUserGroupService {
         }
     }
 
-    public List<ToDoUserGroup> getAllUserGroup() throws ObjectNotFoundException{
+    public List<Group> getAllUserGroup() throws ObjectNotFoundException {
         updateCacheService();
-        List<ToDoUserGroup> userGroups = toDoUserGroupRepository.findAll();
+        List<Group> userGroups = groupRepository.findAll();
         if(userGroups.isEmpty()){
-            throw new ObjectNotFoundException("Can't find all group");
+            throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return userGroups;
     }
 
-    public ToDoUserGroup getUserGroupById(Integer id) throws ObjectNotFoundException {
-        Optional<ToDoUserGroup> userGroup;
+    public Group getUserGroupById(Integer id) throws ObjectNotFoundException {
+        Optional<Group> userGroup;
         Integer hash = Objects.hash(id);
         if(cacheService.containsKey(hash)){
             userGroup = cacheService.get(hash);
         }
         else{
-            userGroup = toDoUserGroupRepository.findById(id);
+            userGroup = groupRepository.findById(id);
             cacheService.put(hash, userGroup);
         }
         if(userGroup.isEmpty()){
-            throw new ObjectNotFoundException(id.toString());
+            throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         cacheService.put(hash, userGroup);
         return userGroup.get();
     }
 
-    public ToDoUserGroup addUserGroup(ToDoUserGroup toDoUserGroup) throws ObjectExistException {
-        Optional<ToDoUserGroup> userGroup = toDoUserGroupRepository.findByName(toDoUserGroup.getGroupName());
+    public Group addUserGroup(Group toDoUserGroup) throws ObjectExistException {
+        Optional<Group> userGroup = groupRepository.findByName(toDoUserGroup.getGroupName());
         if(userGroup.isPresent()){
-            throw new ObjectExistException(toDoUserGroup.getGroupName());
+            throw new ObjectExistException(OBJECT_EXIST_MSG);
         }
-        return toDoUserGroupRepository.save(toDoUserGroup);
+        return groupRepository.save(toDoUserGroup);
     }
 
     public void updateUserNameById(Integer id, String groupName) throws BadRequestException {
-        Optional<ToDoUserGroup> userGroup;
+        Optional<Group> userGroup;
         Integer hash = Objects.hash(id);
         if(cacheService.containsKey(hash)){
             userGroup = cacheService.get(hash);
         }
         else{
-            userGroup = toDoUserGroupRepository.findById(id);
+            userGroup = groupRepository.findById(id);
             cacheService.put(hash, userGroup);
         }
         if(userGroup.isEmpty()){
-            throw new BadRequestException(id.toString());
+            throw new BadRequestException(BAD_REQUEST_MSG);
         }
         userGroup.get().setGroupName(groupName);
         if(cacheService.containsKey(hash)){
             cacheService.remove(hash);
         }
         cacheService.put(hash, userGroup);
-        toDoUserGroupRepository.save(userGroup.get());
+        groupRepository.save(userGroup.get());
     }
 
     public void deleteGroupById(Integer id) throws BadRequestException {
         Integer hash = Objects.hash(id);
-        Optional<ToDoUserGroup> userGroup;
+        Optional<Group> userGroup;
         if(cacheService.containsKey(hash)){
             userGroup = cacheService.get(hash);
         }
         else{
-            userGroup = toDoUserGroupRepository.findById(id);
+            userGroup = groupRepository.findById(id);
         }
         if(userGroup.isEmpty()){
-            throw new BadRequestException(id.toString());
+            throw new BadRequestException(BAD_REQUEST_MSG);
         }
         if(cacheService.containsKey(hash)){
             cacheService.remove(hash);
         }
-        toDoUserGroupRepository.deleteById(id);
+        groupRepository.deleteById(id);
     }
 
     @Transactional
-    public ToDoUserGroup getGroupByUserId(Integer id) throws ObjectNotFoundException {
-        Optional<ToDoUser> user = toDoUserRepository.findById(id);
+    public Group getGroupByUserId(Integer id) throws ObjectNotFoundException {
+        Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()){
             throw new ObjectNotFoundException(id.toString());
         }
-        Optional<ToDoUserGroup> userGroup = toDoUserGroupRepository.findGroupByUserId(id);
+        Optional<Group> userGroup = groupRepository.findGroupByUserId(id);
         if(userGroup.isEmpty()){
-            throw new ObjectNotFoundException("User group nor found");
+            throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return userGroup.get();
     }
-
 }
