@@ -10,12 +10,11 @@ import org.springframework.stereotype.Repository;
 import com.example.todolist.model.Group;
 
 @Repository
-public interface GroupRepository extends JpaRepository<Group,Integer> {
+public interface GroupRepository extends JpaRepository<Group, Integer> {
 
     @Query("SELECT s FROM Group s WHERE s.groupName =: groupName")
-    Optional<Group> findByName(@Param("groupName")String groupName);
+    Optional<Group> findByName(@Param("groupName") final String groupName);
 
     @Query("SELECT s FROM Group s JOIN s.toDoUsers t WHERE t.id=:userId")
-	Optional<Group> findGroupByUserId(@Param("userId")Integer userId);
-
+    Optional<Group> findGroupByUserId(@Param("userId") final Integer userId);
 }

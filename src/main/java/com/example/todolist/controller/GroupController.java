@@ -40,32 +40,34 @@ public class GroupController {
 
     @GetMapping(path = "group/id/{id}")
     @Operation(summary = "Get group", description = "Get group of user by id")
-    public ResponseEntity<Group> getUserGroupById(@PathVariable Integer id) throws ObjectNotFoundException {
+    public ResponseEntity<Group> getUserGroupById(@PathVariable final Integer id) throws ObjectNotFoundException {
         return new ResponseEntity<>(groupService.getUserGroupById(id), HttpStatus.OK);
     }
-    
+
     @GetMapping(path = "group/user/id/{id}")
     @Operation(summary = "Get group", description = "Get group of user by user id")
-    public ResponseEntity<Group> getGroupByUserId(@PathVariable Integer id) throws ObjectNotFoundException {
+    public ResponseEntity<Group> getGroupByUserId(@PathVariable final Integer id) throws ObjectNotFoundException {
         return new ResponseEntity<>(groupService.getGroupByUserId(id), HttpStatus.OK);
     }
-    
+
     @PostMapping(path = "group/add")
     @Operation(summary = "Add group of user")
-    public ResponseEntity<Group> addGroup(@Validated @RequestBody Group toDoUserGroup) throws ObjectExistException {
-        return new ResponseEntity<>(groupService.addUserGroup(toDoUserGroup),HttpStatus.CREATED);
+    public ResponseEntity<Group> addGroup(@Validated @RequestBody final Group toDoUserGroup)
+            throws ObjectExistException {
+        return new ResponseEntity<>(groupService.addUserGroup(toDoUserGroup), HttpStatus.CREATED);
     }
 
     @PutMapping(path = "group/name/new/{id}")
     @Operation(summary = "Update group of user")
-    public ResponseEntity<HttpStatus> updateGroupNameById(@PathVariable Integer id,@Validated @RequestBody String groupName) throws BadRequestException {
+    public ResponseEntity<HttpStatus> updateGroupNameById(@PathVariable final Integer id,
+            @Validated @RequestBody final String groupName) throws BadRequestException {
         groupService.updateUserNameById(id, groupName);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+
     @DeleteMapping(path = "group/delete/{id}")
     @Operation(summary = "Delete group of user", description = "Delete group of user by id")
-    public ResponseEntity<HttpStatus> deleteGroupById(@PathVariable Integer id) throws BadRequestException {
+    public ResponseEntity<HttpStatus> deleteGroupById(@PathVariable final Integer id) throws BadRequestException {
         groupService.deleteGroupById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

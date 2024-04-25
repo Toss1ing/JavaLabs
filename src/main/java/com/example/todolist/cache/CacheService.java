@@ -1,31 +1,38 @@
 package com.example.todolist.cache;
 
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
 
 @Service
-public class CacheService<K, V> {
-    HashMap<K,V> cache = new HashMap<>();
+@AllArgsConstructor
+public final class CacheService<K, V> {
+    private final HashMap<K, V> cache = new HashMap<>();
 
-    public void put(K key, V value){
+    private static final Integer MAX_SIZE = 2000;
+
+    public void put(final K key, final V value) {
+        if (cache.size() > MAX_SIZE) {
+            cache.clear();
+        }
         cache.put(key, value);
     }
 
-    public boolean containsKey(K key){ 
+    public boolean containsKey(final K key) {
         return cache.containsKey(key);
     }
 
-    public void clear(){ 
+    public void clear() {
         cache.clear();
     }
 
-    public void remove(K key){
+    public void remove(final K key) {
         cache.remove(key);
     }
 
-    public V get(K key){
+    public V get(final K key) {
         return cache.get(key);
     }
 }

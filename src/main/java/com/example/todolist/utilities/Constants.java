@@ -5,6 +5,8 @@ public final class Constants {
     public static final String OBJECT_EXIST_MSG = "Object is exist";
     public static final String BAD_REQUEST_MSG = "Bad request, try again";
 
-    Constants(){
+    private Constants() {
+
     }
+
 }

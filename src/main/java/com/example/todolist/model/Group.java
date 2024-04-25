@@ -2,7 +2,6 @@ package com.example.todolist.model;
 
 import java.util.List;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.Hidden;
@@ -21,12 +20,12 @@ import lombok.Data;
 public class Group {
     @Id
     @Hidden
-    Integer id;
+    private Integer id;
 
     @Schema(name = "Group name", example = "Family")
-    String groupName;
+    private String groupName;
 
-    @OneToMany(mappedBy = "userGroup",orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userGroup", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<User> toDoUsers;
 }

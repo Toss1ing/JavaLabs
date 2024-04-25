@@ -23,15 +23,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 
-
 @RestController
 @RequestMapping(path = "/api/v1/todo")
 @AllArgsConstructor
 @Tag(name = "Tasks", description = "Direction with tasks")
-public class ItemController{
+public class ItemController {
 
     private final ItemService itemService;
-    
+
     @GetMapping(path = "/item")
     @Operation(summary = "Get tasks", description = "Get list of task")
     public ResponseEntity<List<Item>> getToDoItems() throws ObjectNotFoundException {
@@ -40,31 +39,32 @@ public class ItemController{
 
     @GetMapping(path = "/item/id/{id}")
     @Operation(summary = "Get task", description = "Get task by id")
-    public ResponseEntity<Item> getToDoItemById(@PathVariable Integer id) throws ObjectNotFoundException {
-        return new ResponseEntity<>(itemService.getToDoItemById(id) ,HttpStatus.OK);
+    public ResponseEntity<Item> getToDoItemById(@PathVariable final Integer id) throws ObjectNotFoundException {
+        return new ResponseEntity<>(itemService.getToDoItemById(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/item/search/description/{keyWord}")
     @Operation(summary = "Get tasks", description = "Get tasks by word in description of task")
-    public ResponseEntity<List<Item>> getToDoItemByWord(@PathVariable String keyWord) throws ObjectNotFoundException {
+    public ResponseEntity<List<Item>> getToDoItemByWord(@PathVariable final String keyWord)
+            throws ObjectNotFoundException {
         return new ResponseEntity<>(itemService.getToDoItemByWord(keyWord), HttpStatus.OK);
     }
 
     @GetMapping(path = "item/name/{taskName}")
     @Operation(summary = "Get task", description = "Get task by name")
-    public ResponseEntity<Item> getToDoItemByName(@PathVariable String taskName) throws ObjectNotFoundException {
-        return new ResponseEntity<>(itemService.getToDoItemByName(taskName) ,HttpStatus.OK);
+    public ResponseEntity<Item> getToDoItemByName(@PathVariable final String taskName) throws ObjectNotFoundException {
+        return new ResponseEntity<>(itemService.getToDoItemByName(taskName), HttpStatus.OK);
     }
 
     @PostMapping(path = "/item/add")
     @Operation(summary = "Add task")
-    public ResponseEntity<Item> addToDoItem(@RequestBody Item toDoItem) throws ObjectExistException {
-        return new ResponseEntity<>(itemService.save(toDoItem) ,HttpStatus.CREATED);
+    public ResponseEntity<Item> addToDoItem(@RequestBody final Item toDoItem) throws ObjectExistException {
+        return new ResponseEntity<>(itemService.save(toDoItem), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/item/delete/id/{id}")
     @Operation(summary = "Delete task", description = "Delete task by id")
-    public ResponseEntity<HttpStatus> deleteToDoItemById(@PathVariable Integer id) throws BadRequestException {
+    public ResponseEntity<HttpStatus> deleteToDoItemById(@PathVariable final Integer id) throws BadRequestException {
         itemService.deleteToDoItemById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -78,7 +78,7 @@ public class ItemController{
 
     @PutMapping(path = "item/complete/{itemId}")
     @Operation(summary = "Complete task")
-    public ResponseEntity<HttpStatus> completeTaskById(@PathVariable  Integer itemId) throws BadRequestException {
+    public ResponseEntity<HttpStatus> completeTaskById(@PathVariable final Integer itemId) throws BadRequestException {
         itemService.completeTaskById(itemId);
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -2,7 +2,7 @@ package com.example.todolist.exception;
 
 public class ObjectExistException extends Exception {
 
-    public ObjectExistException(String message){
+    public ObjectExistException(final String message) {
         super(message);
     }
 

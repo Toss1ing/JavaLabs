@@ -1,15 +1,17 @@
 package com.example.todolist.model;
 
+import java.time.Instant;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.Data;
-
-import java.time.Instant;
-import java.util.List;
-
 
 @Entity
 @Data
@@ -18,7 +20,7 @@ public class Item {
     @Id
     @Hidden
     private Integer id;
-    
+
     @Schema(name = "Name of task", example = "Feed dog")
     private String nameTask;
 

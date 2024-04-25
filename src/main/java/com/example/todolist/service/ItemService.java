@@ -1,5 +1,17 @@
 package com.example.todolist.service;
 
+import static com.example.todolist.utilities.Constants.BAD_REQUEST_MSG;
+import static com.example.todolist.utilities.Constants.NOT_FOUND_MSG;
+import static com.example.todolist.utilities.Constants.OBJECT_EXIST_MSG;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import com.example.todolist.cache.CacheService;
 import com.example.todolist.exception.BadRequestException;
 import com.example.todolist.exception.ObjectExistException;
@@ -9,34 +21,21 @@ import com.example.todolist.repository.ItemRepository;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.time.Instant;
-
-import static com.example.todolist.utilities.Constants.NOT_FOUND_MSG;
-import static com.example.todolist.utilities.Constants.BAD_REQUEST_MSG;
-import static com.example.todolist.utilities.Constants.OBJECT_EXIST_MSG;
-
-
 @Service
 @AllArgsConstructor
 public class ItemService {
 
-    ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
-    CacheService<Integer,Optional<Item>> cacheService;
+    private final CacheService<Integer, Optional<Item>> cacheService;
 
     private static final Integer ALL_CONTAINS = 1111;
 
     private void updateCacheService() {
-        if(!cacheService.containsKey(ALL_CONTAINS)){
+        if (!cacheService.containsKey(ALL_CONTAINS)) {
             List<Item> items = itemRepository.findAll();
-            for(Item item: items){
-                if(cacheService.containsKey(item.getId())){
+            for (Item item : items) {
+                if (cacheService.containsKey(item.getId())) {
                     int hash = Objects.hash(item.getId());
                     cacheService.put(hash, Optional.of(item));
                 }
@@ -48,42 +47,41 @@ public class ItemService {
     public List<Item> getToDoItems() throws ObjectNotFoundException {
         updateCacheService();
         List<Item> items = itemRepository.findAll();
-        if(items.isEmpty()){
+        if (items.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return itemRepository.findAll();
     }
 
-    public Item getToDoItemById(Integer id) throws ObjectNotFoundException {
+    public Item getToDoItemById(final Integer id) throws ObjectNotFoundException {
         Integer hash = Objects.hashCode(id);
         Optional<Item> item;
-        if(cacheService.containsKey(hash)){
+        if (cacheService.containsKey(hash)) {
             item = cacheService.get(hash);
-        }
-        else{
+        } else {
             item = itemRepository.findById(id);
             cacheService.put(hash, item);
         }
-        if(item.isEmpty()){
+        if (item.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return item.get();
     }
 
-    public Item getToDoItemByName(String taskName) throws ObjectNotFoundException {
+    public Item getToDoItemByName(final String taskName) throws ObjectNotFoundException {
         Optional<Item> item = itemRepository.findByName(taskName);
-        if(item.isEmpty()){
+        if (item.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return item.get();
     }
 
-    public Item save(Item toDoItem) throws ObjectExistException {
+    public Item save(final Item toDoItem) throws ObjectExistException {
         Optional<Item> item = itemRepository.findByName(toDoItem.getNameTask());
-        if(item.isPresent()){
+        if (item.isPresent()) {
             throw new ObjectExistException(OBJECT_EXIST_MSG);
-        } 
-        if(toDoItem.getUsers() == null){
+        }
+        if (toDoItem.getUsers() == null) {
             toDoItem.setUsers(new ArrayList<>());
         }
         Integer hash = Objects.hash(toDoItem.getId());
@@ -91,12 +89,12 @@ public class ItemService {
         return itemRepository.save(toDoItem);
     }
 
-    public void deleteToDoItemById(Integer id) throws BadRequestException {
-        if(itemRepository.findById(id).isEmpty()){
+    public void deleteToDoItemById(final Integer id) throws BadRequestException {
+        if (itemRepository.findById(id).isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
         Integer hash = Objects.hashCode(id);
-        if(cacheService.containsKey(hash)){
+        if (cacheService.containsKey(hash)) {
             cacheService.remove(hash);
         }
         itemRepository.deleteById(id);
@@ -107,34 +105,31 @@ public class ItemService {
         itemRepository.deleteAll();
     }
 
-    public void completeTaskById(Integer taskId) throws BadRequestException {
+    public void completeTaskById(final Integer taskId) throws BadRequestException {
         Optional<Item> item;
         Integer hash = Objects.hash(taskId);
-        if(cacheService.containsKey(hash)){
+        if (cacheService.containsKey(hash)) {
             item = cacheService.get(hash);
-        }
-        else{
+        } else {
             item = itemRepository.findById(taskId);
         }
-        if(item.isEmpty()){
+        if (item.isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
         item.get().setComplete(true);
         item.get().setCompletionDate(Instant.now());
-        if(cacheService.containsKey(hash)){
+        if (cacheService.containsKey(hash)) {
             cacheService.remove(hash);
         }
         cacheService.put(hash, item);
         itemRepository.save(item.get());
     }
 
-    public List<Item> getToDoItemByWord(String keyWord) throws ObjectNotFoundException {
+    public List<Item> getToDoItemByWord(final String keyWord) throws ObjectNotFoundException {
         List<Item> listItemByWord = itemRepository.findByDescriptionTask(keyWord);
-        if(listItemByWord.isEmpty()){
+        if (listItemByWord.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return listItemByWord;
     }
 }
-
-
