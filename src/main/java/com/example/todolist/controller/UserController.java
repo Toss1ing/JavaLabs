@@ -77,9 +77,8 @@ public class UserController {
 
     @DeleteMapping(path = "/user/delete/id/{id}")
     @Operation(summary = "Delete user", description = "Delete user by id")
-    public ResponseEntity<HttpStatus> deleteUserById(@PathVariable final Integer id) throws BadRequestException {
-        userService.deleteUserById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<User> deleteUserById(@PathVariable final Integer id) throws BadRequestException {
+        return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/user/deleteAll")
@@ -91,28 +90,25 @@ public class UserController {
 
     @DeleteMapping(path = "/user/delete/task/{userId}/{taskId}")
     @Operation(summary = "Delete task", description = "Delete task in user by task id")
-    public ResponseEntity<HttpStatus> deleteTaskInUserById(@PathVariable final Integer userId,
+    public ResponseEntity<User> deleteTaskInUserById(@PathVariable final Integer userId,
             @PathVariable final Integer taskId)
             throws BadRequestException {
-        userService.deleteTaskByIdInUser(userId, taskId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(userService.deleteTaskByIdInUser(userId, taskId), HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/user/delete/group/{userId}")
     @Operation(summary = "Delete group", description = "Delete group in user by id")
-    public ResponseEntity<HttpStatus> deleteGroupInUserById(@PathVariable final Integer userId)
+    public ResponseEntity<User> deleteGroupInUserById(@PathVariable final Integer userId)
             throws BadRequestException {
-        userService.deleteGroupInUserByID(userId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(userService.deleteGroupInUserByID(userId), HttpStatus.NO_CONTENT);
     }
 
     @PutMapping(path = "/user/name/new/{userId}")
     @Operation(summary = "Add user")
-    public ResponseEntity<HttpStatus> updateUserNameById(@PathVariable final Integer userId,
+    public ResponseEntity<User> updateUserNameById(@PathVariable final Integer userId,
             @RequestBody final String newName)
             throws BadRequestException {
-        userService.updateUserNameById(userId, newName);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(userService.updateUserNameById(userId, newName), HttpStatus.OK);
     }
 
     @PostMapping(path = "/user/add/users")

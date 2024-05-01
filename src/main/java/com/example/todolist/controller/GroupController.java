@@ -59,16 +59,14 @@ public class GroupController {
 
     @PutMapping(path = "group/name/new/{id}")
     @Operation(summary = "Update group of user")
-    public ResponseEntity<HttpStatus> updateGroupNameById(@PathVariable final Integer id,
+    public ResponseEntity<Group> updateGroupNameById(@PathVariable final Integer id,
             @Validated @RequestBody final String groupName) throws BadRequestException {
-        groupService.updateUserNameById(id, groupName);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(groupService.updateUserNameById(id, groupName), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "group/delete/{id}")
     @Operation(summary = "Delete group of user", description = "Delete group of user by id")
-    public ResponseEntity<HttpStatus> deleteGroupById(@PathVariable final Integer id) throws BadRequestException {
-        groupService.deleteGroupById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Group> deleteGroupById(@PathVariable final Integer id) throws BadRequestException {
+        return new ResponseEntity<>(groupService.deleteGroupById(id), HttpStatus.NO_CONTENT);
     }
 }

@@ -29,7 +29,7 @@ import lombok.AllArgsConstructor;
 @Tag(name = "Tasks", description = "Direction with tasks")
 public class ItemController {
 
-    private final ItemService itemService;
+    ItemService itemService;
 
     @GetMapping(path = "/item")
     @Operation(summary = "Get tasks", description = "Get list of task")
@@ -39,7 +39,8 @@ public class ItemController {
 
     @GetMapping(path = "/item/id/{id}")
     @Operation(summary = "Get task", description = "Get task by id")
-    public ResponseEntity<Item> getToDoItemById(@PathVariable final Integer id) throws ObjectNotFoundException {
+    public ResponseEntity<Item> getToDoItemById(@PathVariable final Integer id)
+            throws ObjectNotFoundException {
         return new ResponseEntity<>(itemService.getToDoItemById(id), HttpStatus.OK);
     }
 
@@ -64,9 +65,8 @@ public class ItemController {
 
     @DeleteMapping(path = "/item/delete/id/{id}")
     @Operation(summary = "Delete task", description = "Delete task by id")
-    public ResponseEntity<HttpStatus> deleteToDoItemById(@PathVariable final Integer id) throws BadRequestException {
-        itemService.deleteToDoItemById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    public ResponseEntity<Item> deleteToDoItemById(@PathVariable final Integer id) throws BadRequestException {
+        return new ResponseEntity<>(itemService.deleteToDoItemById(id), HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "item/deleteAll")
@@ -78,8 +78,7 @@ public class ItemController {
 
     @PutMapping(path = "item/complete/{itemId}")
     @Operation(summary = "Complete task")
-    public ResponseEntity<HttpStatus> completeTaskById(@PathVariable final Integer itemId) throws BadRequestException {
-        itemService.completeTaskById(itemId);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<Item> completeTaskById(@PathVariable final Integer itemId) throws BadRequestException {
+        return new ResponseEntity<>(itemService.completeTaskById(itemId), HttpStatus.OK);
     }
 }

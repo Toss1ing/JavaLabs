@@ -80,7 +80,7 @@ public class GroupService {
         return groupRepository.save(toDoUserGroup);
     }
 
-    public void updateUserNameById(final Integer id, final String groupName) throws BadRequestException {
+    public Group updateUserNameById(final Integer id, final String groupName) throws BadRequestException {
         Optional<Group> userGroup;
         Integer hash = Objects.hash(id);
         if (cacheService.containsKey(hash)) {
@@ -98,9 +98,10 @@ public class GroupService {
         }
         cacheService.put(hash, userGroup);
         groupRepository.save(userGroup.get());
+        return userGroup.get();
     }
 
-    public void deleteGroupById(final Integer id) throws BadRequestException {
+    public Group deleteGroupById(final Integer id) throws BadRequestException {
         Integer hash = Objects.hash(id);
         Optional<Group> userGroup;
         if (cacheService.containsKey(hash)) {
@@ -115,6 +116,7 @@ public class GroupService {
             cacheService.remove(hash);
         }
         groupRepository.deleteById(id);
+        return userGroup.get();
     }
 
     @Transactional

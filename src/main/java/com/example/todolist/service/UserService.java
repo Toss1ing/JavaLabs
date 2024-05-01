@@ -80,7 +80,7 @@ public class UserService {
         return user.get();
     }
 
-    public void deleteUserById(final Integer id) throws BadRequestException {
+    public User deleteUserById(final Integer id) throws BadRequestException {
         Optional<User> user;
         Integer hash = Objects.hash(id);
         if (cacheService.containsKey(hash)) {
@@ -95,6 +95,7 @@ public class UserService {
             cacheService.remove(hash);
         }
         userRepository.deleteById(id);
+        return user.get();
     }
 
     public void deleteAllUser() {
@@ -132,7 +133,7 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteTaskByIdInUser(final Integer userId, final Integer taskId) throws BadRequestException {
+    public User deleteTaskByIdInUser(final Integer userId, final Integer taskId) throws BadRequestException {
         Optional<User> user;
         Integer hash = Objects.hash(userId);
         if (cacheService.containsKey(hash)) {
@@ -149,9 +150,10 @@ public class UserService {
         }
         cacheService.put(hash, user);
         userRepository.save(user.get());
+        return user.get();
     }
 
-    public void updateUserNameById(final Integer userId, final String newName) throws BadRequestException {
+    public User updateUserNameById(final Integer userId, final String newName) throws BadRequestException {
         Optional<User> user;
         Integer hash = Objects.hash(userId);
         if (cacheService.containsKey(hash)) {
@@ -168,6 +170,7 @@ public class UserService {
         }
         cacheService.put(userId, user);
         userRepository.save(user.get());
+        return user.get();
     }
 
     public List<User> getUsersWithTaskById(final Integer taskId) throws ObjectNotFoundException {
@@ -178,7 +181,7 @@ public class UserService {
         return usersByTaskId;
     }
 
-    public void deleteGroupInUserByID(final Integer userId) throws BadRequestException {
+    public User deleteGroupInUserByID(final Integer userId) throws BadRequestException {
         Optional<User> user;
         Integer hash = Objects.hash(userId);
         if (cacheService.containsKey(hash)) {
@@ -195,6 +198,7 @@ public class UserService {
         }
         cacheService.put(hash, user);
         userRepository.save(user.get());
+        return user.get();
     }
 
     public List<User> addListOfUser(final List<User> users) throws ObjectExistException {

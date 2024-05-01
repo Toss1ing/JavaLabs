@@ -65,6 +65,7 @@ public class ItemService {
         if (item.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
+
         return item.get();
     }
 
@@ -89,8 +90,10 @@ public class ItemService {
         return itemRepository.save(toDoItem);
     }
 
-    public void deleteToDoItemById(final Integer id) throws BadRequestException {
-        if (itemRepository.findById(id).isEmpty()) {
+    public Item deleteToDoItemById(final Integer id) throws BadRequestException {
+
+        Optional<Item> item = itemRepository.findById(id);
+        if (item.isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
         Integer hash = Objects.hashCode(id);
@@ -98,6 +101,7 @@ public class ItemService {
             cacheService.remove(hash);
         }
         itemRepository.deleteById(id);
+        return item.get();
     }
 
     public void deleteAllItem() {
@@ -105,7 +109,7 @@ public class ItemService {
         itemRepository.deleteAll();
     }
 
-    public void completeTaskById(final Integer taskId) throws BadRequestException {
+    public Item completeTaskById(final Integer taskId) throws BadRequestException {
         Optional<Item> item;
         Integer hash = Objects.hash(taskId);
         if (cacheService.containsKey(hash)) {
@@ -123,6 +127,7 @@ public class ItemService {
         }
         cacheService.put(hash, item);
         itemRepository.save(item.get());
+        return item.get();
     }
 
     public List<Item> getToDoItemByWord(final String keyWord) throws ObjectNotFoundException {

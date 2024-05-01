@@ -57,7 +57,7 @@ public final class ControllerAspect {
     @AfterThrowing(value = "callMethodController()", throwing = "ex")
     public void afterMethodThrow(final JoinPoint jp, final Throwable ex) {
         if (logger.isInfoEnabled()) {
-            logger.info("After Throwing({})" + " exception({})", jp.getSignature().getName(), ex.getMessage());
+            logger.error("After Throwing({})" + " exception({})", jp.getSignature().getName(), ex.getMessage());
         }
     }
 }
