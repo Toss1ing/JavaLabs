@@ -38,7 +38,7 @@ public class GroupControllerTest {
     private User user = new User();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         user.setId(1);
         user.setBirthDate(Instant.now());
         user.setLoginName("NewLogin");
@@ -53,7 +53,7 @@ public class GroupControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void getAllUserGroupTest() throws ObjectNotFoundException {
+    void getAllUserGroupTest() throws ObjectNotFoundException {
         when(groupService.getAllUserGroup()).thenReturn(Arrays.asList(group, group, group));
 
         ResponseEntity<List<Group>> result = groupController.gerAllUserGroup();
@@ -63,7 +63,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void getUserGroupByIdTest() throws ObjectNotFoundException {
+    void getUserGroupByIdTest() throws ObjectNotFoundException {
         when(groupService.getUserGroupById(1)).thenReturn(group);
 
         ResponseEntity<Group> result = groupController.getUserGroupById(1);
@@ -72,7 +72,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void getGroupByUserIdTest() throws ObjectNotFoundException {
+    void getGroupByUserIdTest() throws ObjectNotFoundException {
         when(groupService.getGroupByUserId(1)).thenReturn(group);
 
         ResponseEntity<Group> result = groupController.getGroupByUserId(1);
@@ -81,7 +81,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void addGroupTest() throws ObjectExistException {
+    void addGroupTest() throws ObjectExistException {
         when(groupService.addUserGroup(group)).thenReturn(group);
 
         ResponseEntity<Group> result = groupController.addGroup(group);
@@ -90,7 +90,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void updateUserNameByIdTest() throws BadRequestException {
+    void updateUserNameByIdTest() throws BadRequestException {
         ResponseEntity<Group> result = groupController.updateGroupNameById(1, "newName");
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -98,7 +98,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void deleteGroupByIdTest() throws BadRequestException {
+    void deleteGroupByIdTest() throws BadRequestException {
         ResponseEntity<Group> result = groupController.deleteGroupById(1);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());

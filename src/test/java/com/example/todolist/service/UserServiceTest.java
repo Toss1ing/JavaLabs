@@ -44,11 +44,11 @@ public class UserServiceTest {
     private UserService userService;
 
     private User user = new User();
-    Group group = new Group();
-    Item item = new Item();
+    private Group group = new Group();
+    private Item item = new Item();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         group.setId(1);
         group.setGroupName("GroupName");
         group.setToDoUsers(new ArrayList<>());
@@ -75,7 +75,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getToDoUserTest() throws ObjectNotFoundException {
+    void getToDoUserTest() throws ObjectNotFoundException {
         when(userRepository.findAll()).thenReturn(Arrays.asList(user, user));
 
         List<User> result = userService.getToDoUser();
@@ -85,14 +85,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getToDoUserTest_Throw() throws ObjectNotFoundException {
+    void getToDoUserTest_Throw() throws ObjectNotFoundException {
         when(userRepository.findAll()).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUser());
     }
 
     @Test
-    public void getToDoItemByIdTest() throws ObjectNotFoundException {
+    void getToDoItemByIdTest() throws ObjectNotFoundException {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.getToDoUserById(1);
@@ -101,14 +101,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUserById(1));
     }
 
     @Test
-    public void getToDoUserByName() throws ObjectNotFoundException {
+    void getToDoUserByName() throws ObjectNotFoundException {
         when(userRepository.findByName("UserName")).thenReturn(Optional.of(user));
 
         User result = userService.getToDoUserByName("UserName");
@@ -117,14 +117,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getToDoUserByName_Throw() throws ObjectNotFoundException {
+    void getToDoUserByName_Throw() throws ObjectNotFoundException {
         when(userRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUserByName("asdf"));
     }
 
     @Test
-    public void deleteUserById() throws BadRequestException {
+    void deleteUserById() throws BadRequestException {
         doNothing().when(userRepository).deleteById(1);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
@@ -134,14 +134,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteUserById_Throw() throws BadRequestException {
+    void deleteUserById_Throw() throws BadRequestException {
         when(userRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteUserById(2));
     }
 
     @Test
-    public void addUserTest() throws ObjectExistException {
+    void addUserTest() throws ObjectExistException {
         when(userRepository.save(user)).thenReturn(user);
 
         User result = userService.addUser(user);
@@ -150,7 +150,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void addTaskInUserByIdTest() throws BadRequestException {
+    void addTaskInUserByIdTest() throws BadRequestException {
         when(userRepository.findByName("UserName")).thenReturn(Optional.of(user));
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
         when(userRepository.save(user)).thenReturn(user);
@@ -162,14 +162,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void addTaskInUserByIdTest_Throw() throws BadRequestException {
+    void addTaskInUserByIdTest_Throw() throws BadRequestException {
         when(userRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.addTaskInUserById("asdf", 123));
     }
 
     @Test
-    public void deleteTaskByIdInUserTest() throws BadRequestException {
+    void deleteTaskByIdInUserTest() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.deleteTaskByIdInUser(1, 1);
@@ -178,14 +178,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteTaskByIdInUserTest_Throw() throws BadRequestException {
+    void deleteTaskByIdInUserTest_Throw() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteTaskByIdInUser(1, 1));
     }
 
     @Test
-    public void updateUserNameByIdTest() throws BadRequestException {
+    void updateUserNameByIdTest() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.updateUserNameById(1, "newName");
@@ -194,14 +194,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void updateUserNameByIdTest_Throw() throws BadRequestException {
+    void updateUserNameByIdTest_Throw() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.updateUserNameById(1, "newName"));
     }
 
     @Test
-    public void getUsersWithTaskByIdTest() throws ObjectNotFoundException {
+    void getUsersWithTaskByIdTest() throws ObjectNotFoundException {
         when(userRepository.findUserWithTaskById(1)).thenReturn(Arrays.asList(user, user));
 
         List<User> result = userService.getUsersWithTaskById(1);
@@ -211,14 +211,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getUsersWithTaskByIdTest_Throw() throws ObjectNotFoundException {
+    void getUsersWithTaskByIdTest_Throw() throws ObjectNotFoundException {
         when(userRepository.findUserWithTaskById(1)).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getUsersWithTaskById(1));
     }
 
     @Test
-    public void deleteGroupInUserByIdTest() throws BadRequestException {
+    void deleteGroupInUserByIdTest() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.deleteGroupInUserByID(1);
@@ -227,14 +227,14 @@ public class UserServiceTest {
     }
 
     @Test
-    public void deleteGroupInUserByIdTest_Throw() throws BadRequestException {
+    void deleteGroupInUserByIdTest_Throw() throws BadRequestException {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteGroupInUserByID(1));
     }
 
     @Test
-    public void addListOfUser() throws ObjectExistException {
+    void addListOfUser() throws ObjectExistException {
         when(userRepository.findAll()).thenReturn(Arrays.asList());
 
         List<User> result = userService.addListOfUser(Arrays.asList(user));

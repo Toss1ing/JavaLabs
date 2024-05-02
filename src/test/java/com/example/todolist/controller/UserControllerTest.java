@@ -39,7 +39,7 @@ public class UserControllerTest {
     Item item = new Item();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         group.setId(1);
         group.setGroupName("GroupName");
         group.setToDoUsers(new ArrayList<>());
@@ -66,7 +66,7 @@ public class UserControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void getToDoUserTest() throws ObjectNotFoundException {
+    void getToDoUserTest() throws ObjectNotFoundException {
         when(userService.getToDoUser()).thenReturn(Arrays.asList(user, user));
 
         ResponseEntity<List<User>> result = userController.getToDoUser();
@@ -77,7 +77,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getToDoUserByIdTest() throws ObjectNotFoundException {
+    void getToDoUserByIdTest() throws ObjectNotFoundException {
         when(userService.getToDoUserById(1)).thenReturn(user);
 
         ResponseEntity<User> result = userController.getToDoUserById(1);
@@ -86,7 +86,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getToDoUserByNameTest() throws ObjectNotFoundException {
+    void getToDoUserByNameTest() throws ObjectNotFoundException {
         when(userService.getToDoUserByName("UserName")).thenReturn(user);
 
         ResponseEntity<User> result = userController.getToDoUserByName("UserName");
@@ -96,7 +96,7 @@ public class UserControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void getToDoUsersWithTaskByIdTest() throws ObjectNotFoundException {
+    void getToDoUsersWithTaskByIdTest() throws ObjectNotFoundException {
         when(userService.getUsersWithTaskById(1)).thenReturn(Arrays.asList(user));
 
         ResponseEntity<List<User>> result = userController.getToDoUsersWithTaskById(1);
@@ -106,7 +106,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void addUserTest() throws ObjectExistException {
+    void addUserTest() throws ObjectExistException {
         when(userService.addUser(user)).thenReturn(user);
 
         ResponseEntity<User> result = userController.addUser(user);
@@ -115,7 +115,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void addTaskByIdInUserTest() throws BadRequestException {
+    void addTaskByIdInUserTest() throws BadRequestException {
         when(userService.addTaskInUserById("UserName", 1)).thenReturn(user);
 
         ResponseEntity<User> result = userController.addTaskByIdInUser("UserName", 1);
@@ -124,7 +124,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteUserByIdTest() throws BadRequestException {
+    void deleteUserByIdTest() throws BadRequestException {
         ResponseEntity<User> result = userController.deleteUserById(1);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
@@ -132,7 +132,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteAllUserTest() {
+    void deleteAllUserTest() {
         ResponseEntity<HttpStatus> result = userController.deleteAllUser();
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
@@ -140,7 +140,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteTaskInUserByIdTest() throws BadRequestException {
+    void deleteTaskInUserByIdTest() throws BadRequestException {
         ResponseEntity<User> result = userController.deleteTaskInUserById(1, 1);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
@@ -148,7 +148,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void deleteGroupInUserByIdTest() throws BadRequestException {
+    void deleteGroupInUserByIdTest() throws BadRequestException {
         ResponseEntity<User> result = userController.deleteGroupInUserById(1);
 
         assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
@@ -156,7 +156,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserNameByIdTest() throws BadRequestException {
+    void updateUserNameByIdTest() throws BadRequestException {
         ResponseEntity<User> result = userController.updateUserNameById(1, "NewUserName");
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -165,7 +165,7 @@ public class UserControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void addListOfUserTest() throws ObjectExistException {
+    void addListOfUserTest() throws ObjectExistException {
         when(userService.addListOfUser(Arrays.asList(user, user))).thenReturn(Arrays.asList(user, user));
         ResponseEntity<List<User>> result = userController.addListOfUser(Arrays.asList(user, user));
 

@@ -33,7 +33,7 @@ public class ItemControllerTest {
     Item item = new Item();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         item.setId(1);
         item.setDescription("Description");
         item.setNameTask("ItemName");
@@ -45,7 +45,7 @@ public class ItemControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void getToDoItemsTest() throws ObjectNotFoundException {
+    void getToDoItemsTest() throws ObjectNotFoundException {
         when(itemService.getToDoItems()).thenReturn(Arrays.asList(item, item));
 
         ResponseEntity<List<Item>> result = itemController.getToDoItems();
@@ -56,7 +56,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void getToDoItemByIdTest() throws ObjectNotFoundException {
+    void getToDoItemByIdTest() throws ObjectNotFoundException {
         when(itemService.getToDoItemById(1)).thenReturn(item);
 
         ResponseEntity<Item> result = itemController.getToDoItemById(1);
@@ -67,7 +67,7 @@ public class ItemControllerTest {
 
     @Test
     @SuppressWarnings("null")
-    public void getToDoItemByWordTest() throws ObjectNotFoundException {
+    void getToDoItemByWordTest() throws ObjectNotFoundException {
         when(itemService.getToDoItemByWord("Description")).thenReturn(Arrays.asList(item, item));
 
         ResponseEntity<List<Item>> result = itemController.getToDoItemByWord("Description");
@@ -78,7 +78,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void getToDoItemByNameTest() throws ObjectNotFoundException {
+    void getToDoItemByNameTest() throws ObjectNotFoundException {
         when(itemService.getToDoItemByName("ItemName")).thenReturn(item);
 
         ResponseEntity<Item> result = itemController.getToDoItemByName("ItemName");
@@ -88,7 +88,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void addToDoItemTest() throws ObjectExistException {
+    void addToDoItemTest() throws ObjectExistException {
         when(itemService.save(item)).thenReturn(item);
 
         ResponseEntity<Item> result = itemController.addToDoItem(item);
@@ -98,7 +98,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void deleteToDoItemByIdTest() throws BadRequestException {
+    void deleteToDoItemByIdTest() throws BadRequestException {
         when(itemService.deleteToDoItemById(1)).thenReturn(item);
 
         ResponseEntity<Item> result = itemController.deleteToDoItemById(1);
@@ -108,7 +108,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void completeTaskByIdTest() throws BadRequestException {
+    void completeTaskByIdTest() throws BadRequestException {
         when(itemService.completeTaskById(1)).thenReturn(item);
 
         ResponseEntity<Item> result = itemController.completeTaskById(1);
