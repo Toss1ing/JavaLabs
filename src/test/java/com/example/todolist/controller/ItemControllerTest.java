@@ -30,7 +30,7 @@ class ItemControllerTest {
     @InjectMocks
     private ItemController itemController;
 
-    Item item = new Item();
+    private Item item = new Item();
 
     @BeforeEach
     void setUp() {
@@ -61,7 +61,7 @@ class ItemControllerTest {
 
         ResponseEntity<Item> result = itemController.getToDoItemById(1);
 
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(result.getBody(), item);
     }
 

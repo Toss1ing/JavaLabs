@@ -27,16 +27,16 @@ import com.example.todolist.model.User;
 import com.example.todolist.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
-public class UserControllerTest {
+class UserControllerTest {
     @Mock
-    UserService userService;
+    private UserService userService;
 
     @InjectMocks
-    UserController userController;
+    private UserController userController;
 
-    User user = new User();
-    Group group = new Group();
-    Item item = new Item();
+    private User user = new User();
+    private Group group = new Group();
+    private Item item = new Item();
 
     @BeforeEach
     void setUp() {
@@ -171,7 +171,5 @@ public class UserControllerTest {
 
         assertEquals(user, result.getBody().get(0));
         assertEquals(2, result.getBody().size());
-
     }
-
 }

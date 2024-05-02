@@ -26,7 +26,7 @@ import com.example.todolist.model.User;
 import com.example.todolist.service.GroupService;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupControllerTest {
+class GroupControllerTest {
     @Mock
     private GroupService groupService;
 
@@ -34,7 +34,6 @@ public class GroupControllerTest {
     private GroupController groupController;
 
     private Group group = new Group();
-
     private User user = new User();
 
     @BeforeEach
