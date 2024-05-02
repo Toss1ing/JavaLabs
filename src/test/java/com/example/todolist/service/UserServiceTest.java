@@ -30,7 +30,7 @@ import com.example.todolist.repository.ItemRepository;
 import com.example.todolist.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
@@ -80,7 +80,7 @@ public class UserServiceTest {
 
         List<User> result = userService.getToDoUser();
 
-        assertEquals(result.size(), 2);
+        assertEquals(2, result.size());
         assertEquals(result.get(0), user);
     }
 
@@ -157,7 +157,7 @@ public class UserServiceTest {
 
         User result = userService.addTaskInUserById("UserName", 1);
 
-        assertEquals(result.getToDoItems().size(), 2);
+        assertEquals(2, result.getToDoItems().size());
         assertEquals(result.getToDoItems().get(1), item);
     }
 
@@ -174,7 +174,7 @@ public class UserServiceTest {
 
         User result = userService.deleteTaskByIdInUser(1, 1);
 
-        assertEquals(result.getToDoItems().size(), 0);
+        assertEquals(0, result.getToDoItems().size());
     }
 
     @Test
@@ -206,7 +206,7 @@ public class UserServiceTest {
 
         List<User> result = userService.getUsersWithTaskById(1);
 
-        assertEquals(result.size(), 2);
+        assertEquals(2, result.size());
         assertEquals(result.get(0), user);
     }
 
@@ -239,6 +239,6 @@ public class UserServiceTest {
 
         List<User> result = userService.addListOfUser(Arrays.asList(user));
 
-        assertEquals(result.size(), 1);
+        assertEquals(1, result.size());
     }
 }

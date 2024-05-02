@@ -27,7 +27,7 @@ import com.example.todolist.model.Item;
 import com.example.todolist.repository.ItemRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class ItemServiceTest {
+class ItemServiceTest {
 
     @Mock
     private ItemRepository itemRepository;
@@ -41,7 +41,7 @@ public class ItemServiceTest {
     private Item item = new Item();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         item.setId(1);
         item.setCompletionDate(Instant.now());
         item.setComplete(false);
@@ -52,7 +52,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getToDoItemsTest() throws ObjectNotFoundException {
+    void getToDoItemsTest() throws ObjectNotFoundException {
         when(itemRepository.findAll()).thenReturn(Arrays.asList(item, item));
 
         List<Item> result = itemService.getToDoItems();
@@ -62,7 +62,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getToDoItemsTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemsTest_Throw() throws ObjectNotFoundException {
         when(itemRepository.findAll()).thenReturn(Arrays.asList());
 
         List<Item> result = itemRepository.findAll();
@@ -72,7 +72,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getToDoItemByIdTest() throws ObjectNotFoundException {
+    void getToDoItemByIdTest() throws ObjectNotFoundException {
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
 
         Item result = itemService.getToDoItemById(1);
@@ -81,14 +81,14 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
         when(itemRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemById(2));
     }
 
     @Test
-    public void getToDoItemByNameTest() throws ObjectNotFoundException {
+    void getToDoItemByNameTest() throws ObjectNotFoundException {
         when(itemRepository.findByName("nameTask")).thenReturn(Optional.of(item));
 
         Item result = itemService.getToDoItemByName("nameTask");
@@ -97,14 +97,14 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void getToDoItemByNameTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByNameTest_Throw() throws ObjectNotFoundException {
         when(itemRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemByName("hello"));
     }
 
     @Test
-    public void saveTest() throws ObjectExistException {
+    void saveTest() throws ObjectExistException {
         when(itemRepository.save(any(Item.class))).thenReturn(item);
 
         Item result = itemService.save(item);
@@ -113,7 +113,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void deleteToDoItemByIdTest() throws BadRequestException {
+    void deleteToDoItemByIdTest() throws BadRequestException {
         doNothing().when(itemRepository).deleteById(1);
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
 
@@ -123,40 +123,40 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void deleteToDoItemById_Throw() throws BadRequestException {
+    void deleteToDoItemById_Throw() throws BadRequestException {
         when(itemRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> itemService.deleteToDoItemById(1));
     }
 
     @Test
-    public void completeTaskByIdTest() throws BadRequestException {
+    void completeTaskByIdTest() throws BadRequestException {
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
 
         Item result = itemService.completeTaskById(1);
 
-        assertEquals(result.isComplete(), true);
+        assertEquals(true, result.isComplete());
     }
 
     @Test
-    public void completeTaskByIdTest_Throw() throws BadRequestException {
+    void completeTaskByIdTest_Throw() throws BadRequestException {
         when(itemRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> itemService.completeTaskById(2));
     }
 
     @Test
-    public void getToDoItemByWord() throws ObjectNotFoundException {
+    void getToDoItemByWord() throws ObjectNotFoundException {
         when(itemRepository.findByDescriptionTask("Description")).thenReturn(Arrays.asList(item, item));
 
         List<Item> result = itemService.getToDoItemByWord("Description");
 
-        assertEquals(result.size(), 2);
+        assertEquals(2, result.size());
         assertEquals(result.get(0), item);
     }
 
     @Test
-    public void getToDoItemByWordTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByWordTest_Throw() throws ObjectNotFoundException {
         when(itemRepository.findByDescriptionTask(any(String.class))).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemByWord("asdf"));

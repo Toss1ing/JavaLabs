@@ -23,7 +23,7 @@ import com.example.todolist.model.Item;
 import com.example.todolist.service.ItemService;
 
 @ExtendWith(MockitoExtension.class)
-public class ItemControllerTest {
+class ItemControllerTest {
     @Mock
     private ItemService itemService;
 
@@ -50,8 +50,8 @@ public class ItemControllerTest {
 
         ResponseEntity<List<Item>> result = itemController.getToDoItems();
 
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
-        assertEquals(result.getBody().size(), 2);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+        assertEquals(2, result.getBody().size());
         assertEquals(result.getBody().get(0), item);
     }
 
@@ -72,9 +72,9 @@ public class ItemControllerTest {
 
         ResponseEntity<List<Item>> result = itemController.getToDoItemByWord("Description");
 
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(result.getBody().get(0), item);
-        assertEquals(result.getBody().size(), 2);
+        assertEquals(2, result.getBody().size());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ItemControllerTest {
 
         ResponseEntity<Item> result = itemController.getToDoItemByName("ItemName");
 
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(result.getBody(), item);
     }
 
@@ -93,7 +93,7 @@ public class ItemControllerTest {
 
         ResponseEntity<Item> result = itemController.addToDoItem(item);
 
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertEquals(result.getBody(), item);
     }
 
@@ -103,7 +103,7 @@ public class ItemControllerTest {
 
         ResponseEntity<Item> result = itemController.deleteToDoItemById(1);
 
-        assertEquals(result.getStatusCode(), HttpStatus.NO_CONTENT);
+        assertEquals(HttpStatus.NO_CONTENT, result.getStatusCode());
         assertEquals(result.getBody(), item);
     }
 
@@ -113,7 +113,7 @@ public class ItemControllerTest {
 
         ResponseEntity<Item> result = itemController.completeTaskById(1);
 
-        assertEquals(result.getStatusCode(), HttpStatus.OK);
+        assertEquals(HttpStatus.OK, result.getStatusCode());
         assertEquals(result.getBody(), item);
     }
 
