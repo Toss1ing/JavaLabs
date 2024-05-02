@@ -26,7 +26,7 @@ import com.example.todolist.repository.GroupRepository;
 import com.example.todolist.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-public class GroupServiceTest {
+class GroupServiceTest {
     @Mock
     private GroupRepository groupRepository;
 
@@ -42,14 +42,14 @@ public class GroupServiceTest {
     private Group group = new Group();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         group.setId(1);
         group.setGroupName("GroupName");
         group.setToDoUsers(null);
     }
 
     @Test
-    public void getAllUserGroupTest() throws ObjectNotFoundException {
+    void getAllUserGroupTest() throws ObjectNotFoundException {
         when(groupRepository.findAll()).thenReturn(Arrays.asList(group, group));
 
         List<Group> result = groupService.getAllUserGroup();
@@ -59,14 +59,14 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getAllUserGroupTest_Throw() throws ObjectNotFoundException {
+    void getAllUserGroupTest_Throw() throws ObjectNotFoundException {
         when(groupRepository.findAll()).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> groupService.getAllUserGroup());
     }
 
     @Test
-    public void getUserGroupByIdTest() throws ObjectNotFoundException {
+    void getUserGroupByIdTest() throws ObjectNotFoundException {
         when(groupRepository.findById(1)).thenReturn(Optional.of(group));
 
         Group result = groupService.getUserGroupById(1);
@@ -75,14 +75,14 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void getUserGroupByIdTest_Throw() throws ObjectNotFoundException {
+    void getUserGroupByIdTest_Throw() throws ObjectNotFoundException {
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> groupService.getUserGroupById(1));
     }
 
     @Test
-    public void addUserGroupTest() throws ObjectExistException {
+    void addUserGroupTest() throws ObjectExistException {
         when(groupRepository.save(group)).thenReturn(group);
 
         Group result = groupService.addUserGroup(group);
@@ -91,7 +91,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void deleteGroupByIdTest() throws BadRequestException {
+    void deleteGroupByIdTest() throws BadRequestException {
         doNothing().when(groupRepository).deleteById(1);
         when(groupRepository.findById(1)).thenReturn(Optional.of(group));
 
@@ -101,14 +101,14 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void deleteGroupByIdTest_Throw() throws BadRequestException {
+    void deleteGroupByIdTest_Throw() throws BadRequestException {
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> groupService.deleteGroupById(1));
     }
 
     @Test
-    public void addGroupTest() throws ObjectExistException {
+    void addGroupTest() throws ObjectExistException {
         when(groupRepository.save(any(Group.class))).thenReturn(group);
 
         Group result = groupService.addUserGroup(group);
@@ -117,7 +117,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void updateGroupNameByIdTest() throws BadRequestException {
+    void updateGroupNameByIdTest() throws BadRequestException {
         when(groupRepository.findById(1)).thenReturn(Optional.of(group));
         when(groupRepository.save(any(Group.class))).thenReturn(group);
 
@@ -127,7 +127,7 @@ public class GroupServiceTest {
     }
 
     @Test
-    public void updateGroupNameByIdTest_Throw() throws BadRequestException {
+    void updateGroupNameByIdTest_Throw() throws BadRequestException {
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> groupService.updateUserNameById(1, "asdf"));
