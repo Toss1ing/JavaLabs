@@ -57,7 +57,7 @@ class ItemServiceTest {
 
         List<Item> result = itemService.getToDoItems();
 
-        assertEquals(result.size(), 2);
+        assertEquals(2, result.size());
         assertEquals(result.get(0), item);
     }
 

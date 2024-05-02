@@ -190,7 +190,7 @@ class UserServiceTest {
 
         User result = userService.updateUserNameById(1, "newName");
 
-        assertEquals(result.getLoginName(), "newName");
+        assertEquals("newName", result.getLoginName());
     }
 
     @Test
@@ -223,7 +223,7 @@ class UserServiceTest {
 
         User result = userService.deleteGroupInUserByID(1);
 
-        assertEquals(result.getUserGroup(), null);
+        assertEquals(null, result.getUserGroup());
     }
 
     @Test
