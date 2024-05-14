@@ -3,7 +3,6 @@ package com.example.todolist.model;
 import java.time.Instant;
 import java.util.List;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -21,7 +20,6 @@ import lombok.Data;
 @Table(name = "to_do_users")
 public class User {
         @Id
-        @Hidden
         private Integer id;
 
         @Schema(name = "Name of user", example = "Tossing")

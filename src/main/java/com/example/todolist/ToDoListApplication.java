@@ -10,7 +10,6 @@ public class ToDoListApplication {
 
     @GetMapping(path = "/")
     public static void main(final String[] args) {
-
         SpringApplication.run(ToDoListApplication.class, args);
     }
 

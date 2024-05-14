@@ -93,6 +93,7 @@ class UserServiceTest {
 
     @Test
     void getToDoItemByIdTest() throws ObjectNotFoundException {
+        when(cacheService.get(1)).thenReturn(Optional.empty());
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.getToDoUserById(1);
@@ -102,6 +103,7 @@ class UserServiceTest {
 
     @Test
     void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
+        when(cacheService.get(1)).thenReturn(Optional.empty());
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUserById(1));

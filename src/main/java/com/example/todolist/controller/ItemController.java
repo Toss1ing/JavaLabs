@@ -29,7 +29,7 @@ import lombok.AllArgsConstructor;
 @Tag(name = "Tasks", description = "Direction with tasks")
 public class ItemController {
 
-    ItemService itemService;
+    private final ItemService itemService;
 
     @GetMapping(path = "/item")
     @Operation(summary = "Get tasks", description = "Get list of task")

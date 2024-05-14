@@ -202,6 +202,7 @@ public class UserService {
     }
 
     public List<User> addListOfUser(final List<User> users) throws ObjectExistException {
+
         List<User> usersFromRepository = userRepository.findAll();
         for (User userFromRepository : usersFromRepository) {
             for (User newUser : users) {
