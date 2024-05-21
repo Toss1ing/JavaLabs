@@ -1,6 +1,7 @@
 package com.example.todolist.model;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -8,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -18,6 +21,7 @@ import lombok.Data;
 @Table(name = "to_do_item")
 public class Item {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Hidden
     private Integer id;
 
@@ -43,4 +47,27 @@ public class Item {
     @JsonIgnore
     private List<User> users;
 
+    public Item(final String taskString, final String descriptionString, final Instant dateInstant,
+            final List<User> listUser) {
+        this.complete = false;
+        this.completionDate = dateInstant;
+        this.createdDate = Instant.now();
+        this.description = descriptionString;
+        this.modifierDate = Instant.now();
+        this.nameTask = taskString;
+        if (listUser.isEmpty()) {
+            this.users = new ArrayList<>();
+        }
+        this.users = listUser;
+    }
+
+    public Item() {
+        this.complete = false;
+        this.completionDate = null;
+        this.createdDate = Instant.now();
+        this.description = null;
+        this.modifierDate = Instant.now();
+        this.nameTask = "";
+        this.users = new ArrayList<>();
+    }
 }

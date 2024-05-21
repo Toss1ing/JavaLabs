@@ -68,7 +68,6 @@ public class GroupService {
         if (userGroup.isEmpty()) {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
-        cacheService.put(hash, userGroup);
         return userGroup.get();
     }
 
@@ -80,14 +79,13 @@ public class GroupService {
         return groupRepository.save(toDoUserGroup);
     }
 
-    public Group updateUserNameById(final Integer id, final String groupName) throws BadRequestException {
+    public Group updateGroupNameById(final Integer id, final String groupName) throws BadRequestException {
         Optional<Group> userGroup;
         Integer hash = Objects.hash(id);
         if (cacheService.containsKey(hash)) {
             userGroup = cacheService.get(hash);
         } else {
             userGroup = groupRepository.findById(id);
-            cacheService.put(hash, userGroup);
         }
         if (userGroup.isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);

@@ -23,12 +23,16 @@ import com.example.todolist.exception.ObjectExistException;
 import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.Group;
 import com.example.todolist.model.User;
+import com.example.todolist.service.CounterService;
 import com.example.todolist.service.GroupService;
 
 @ExtendWith(MockitoExtension.class)
 class GroupControllerTest {
     @Mock
     private GroupService groupService;
+
+    @Mock
+    private CounterService counterService;
 
     @InjectMocks
     private GroupController groupController;
@@ -93,7 +97,7 @@ class GroupControllerTest {
         ResponseEntity<Group> result = groupController.updateGroupNameById(1, "newName");
 
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        verify(groupService).updateUserNameById(1, "newName");
+        verify(groupService).updateGroupNameById(1, "newName");
     }
 
     @Test

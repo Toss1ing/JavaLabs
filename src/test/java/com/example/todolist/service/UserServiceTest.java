@@ -4,12 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -92,9 +95,22 @@ class UserServiceTest {
     }
 
     @Test
-    void getToDoItemByIdTest() throws ObjectNotFoundException {
-        when(cacheService.get(1)).thenReturn(Optional.empty());
+    void getToDoUserByIdRepositoryTest() throws ObjectNotFoundException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
+
+        User result = userService.getToDoUserById(1);
+
+        assertEquals(result, user);
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+    }
+
+    @Test
+    void getToDoUserByIdCacheTest() throws ObjectNotFoundException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(user));
 
         User result = userService.getToDoUserById(1);
 
@@ -102,8 +118,9 @@ class UserServiceTest {
     }
 
     @Test
-    void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
-        when(cacheService.get(1)).thenReturn(Optional.empty());
+    void getToDoUserByIdTest_Throw() throws ObjectNotFoundException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUserById(1));
@@ -126,13 +143,28 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserById() throws BadRequestException {
+    void deleteUserByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
         doNothing().when(userRepository).deleteById(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.deleteUserById(1);
 
         assertEquals(result, user);
+    }
+
+    @Test
+    void deleteUserByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        doNothing().when(userRepository).deleteById(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(user));
+
+        User result = userService.deleteUserById(1);
+
+        assertEquals(result, user);
+        verify(cacheService, times(1)).remove(hash);
     }
 
     @Test
@@ -144,23 +176,50 @@ class UserServiceTest {
 
     @Test
     void addUserTest() throws ObjectExistException {
+        Integer hash = Objects.hash(user.getId());
+        when(userRepository.findByName(user.getLoginName())).thenReturn(Optional.empty());
         when(userRepository.save(user)).thenReturn(user);
 
         User result = userService.addUser(user);
 
         assertEquals(result, user);
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
     }
 
     @Test
-    void addTaskInUserByIdTest() throws BadRequestException {
+    void addUserTest_Throw() throws ObjectExistException {
+        when(userRepository.findByName(user.getLoginName())).thenReturn(Optional.of(user));
+
+        assertThrows(ObjectExistException.class, () -> userService.addUser(user));
+    }
+
+    @Test
+    void addTaskInUserByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
         when(userRepository.findByName("UserName")).thenReturn(Optional.of(user));
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
         when(userRepository.save(user)).thenReturn(user);
+        when(cacheService.containsKey(hash)).thenReturn(false);
 
         User result = userService.addTaskInUserById("UserName", 1);
 
         assertEquals(2, result.getToDoItems().size());
         assertEquals(result.getToDoItems().get(1), item);
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+    }
+
+    @Test
+    void addTaskInUserByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(userRepository.findByName("UserName")).thenReturn(Optional.of(user));
+        when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        when(userRepository.save(user)).thenReturn(user);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+
+        User result = userService.addTaskInUserById("UserName", 1);
+
+        assertEquals(2, result.getToDoItems().size());
+
     }
 
     @Test
@@ -171,12 +230,28 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteTaskByIdInUserTest() throws BadRequestException {
+    void deleteTaskByIdInUserRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.deleteTaskByIdInUser(1, 1);
 
         assertEquals(0, result.getToDoItems().size());
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+    }
+
+    @Test
+    void deleteTaskByIdInUserCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(user));
+
+        User result = userService.deleteTaskByIdInUser(1, 1);
+
+        assertEquals(0, result.getToDoItems().size());
+        verify(cacheService, times(1)).remove(hash);
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
     }
 
     @Test
@@ -187,12 +262,28 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserNameByIdTest() throws BadRequestException {
+    void updateUserNameByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.updateUserNameById(1, "newName");
 
         assertEquals("newName", result.getLoginName());
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+    }
+
+    @Test
+    void updateUserNameByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(user));
+
+        User result = userService.updateUserNameById(1, "newName");
+
+        assertEquals("newName", result.getLoginName());
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+        verify(cacheService, times(1)).remove(hash);
     }
 
     @Test
@@ -220,12 +311,29 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteGroupInUserByIdTest() throws BadRequestException {
+    void deleteGroupInUserByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
 
         User result = userService.deleteGroupInUserByID(1);
 
         assertEquals(null, result.getUserGroup());
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+    }
+
+    @Test
+    void deleteGroupInUserByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(user));
+
+        User result = userService.deleteGroupInUserByID(1);
+
+        assertEquals(null, result.getUserGroup());
+        verify(cacheService, times(1)).remove(hash);
+        verify(cacheService, times(1)).put(hash, Optional.of(user));
+
     }
 
     @Test

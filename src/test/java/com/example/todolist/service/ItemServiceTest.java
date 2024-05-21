@@ -5,11 +5,14 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -72,12 +75,27 @@ class ItemServiceTest {
     }
 
     @Test
-    void getToDoItemByIdTest() throws ObjectNotFoundException {
+    void getToDoItemByIdRepositoryTest() throws ObjectNotFoundException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
 
         Item result = itemService.getToDoItemById(1);
 
         assertEquals(result, item);
+        verify(cacheService, times(1)).put(hash, Optional.of(item));
+    }
+
+    @Test
+    void getToDoItemByIdCacheTest() throws ObjectNotFoundException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(item));
+
+        Item result = itemService.getToDoItemById(1);
+
+        assertEquals(result, item);
+        verify(cacheService, times(1)).get(hash);
     }
 
     @Test
@@ -113,13 +131,28 @@ class ItemServiceTest {
     }
 
     @Test
-    void deleteToDoItemByIdTest() throws BadRequestException {
+    void deleteToDoItemByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
         doNothing().when(itemRepository).deleteById(1);
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        when(cacheService.containsKey(hash)).thenReturn(false);
 
         Item result = itemService.deleteToDoItemById(1);
 
         assertEquals(result, item);
+    }
+
+    @Test
+    void deleteToDoItemByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        doNothing().when(itemRepository).deleteById(1);
+        when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        when(cacheService.containsKey(hash)).thenReturn(true);
+
+        Item result = itemService.deleteToDoItemById(1);
+
+        assertEquals(result, item);
+        verify(cacheService, times(1)).remove(hash);
     }
 
     @Test
@@ -130,16 +163,35 @@ class ItemServiceTest {
     }
 
     @Test
-    void completeTaskByIdTest() throws BadRequestException {
+    void completeTaskByIdRepositoryTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
         when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        when(cacheService.containsKey(hash)).thenReturn(false);
 
         Item result = itemService.completeTaskById(1);
 
         assertEquals(true, result.isComplete());
+        verify(cacheService, times(1)).put(hash, Optional.of(item));
+    }
+
+    @Test
+    void completeTaskByIdCacheTest() throws BadRequestException {
+        Integer hash = Objects.hash(1);
+        when(cacheService.containsKey(hash)).thenReturn(true);
+        when(cacheService.get(hash)).thenReturn(Optional.of(item));
+
+        Item result = itemService.completeTaskById(1);
+
+        assertEquals(true, result.isComplete());
+        verify(cacheService, times(1)).remove(hash);
+        verify(cacheService, times(1)).put(hash, Optional.of(item));
+
     }
 
     @Test
     void completeTaskByIdTest_Throw() throws BadRequestException {
+        Integer hash = Objects.hash(2);
+        when(cacheService.containsKey(hash)).thenReturn(false);
         when(itemRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> itemService.completeTaskById(2));

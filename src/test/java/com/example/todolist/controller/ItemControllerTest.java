@@ -20,12 +20,16 @@ import com.example.todolist.exception.BadRequestException;
 import com.example.todolist.exception.ObjectExistException;
 import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.Item;
+import com.example.todolist.service.CounterService;
 import com.example.todolist.service.ItemService;
 
 @ExtendWith(MockitoExtension.class)
 class ItemControllerTest {
     @Mock
     private ItemService itemService;
+
+    @Mock
+    private CounterService counterService;
 
     @InjectMocks
     private ItemController itemController;

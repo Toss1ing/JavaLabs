@@ -18,6 +18,7 @@ import com.example.todolist.exception.BadRequestException;
 import com.example.todolist.exception.ObjectExistException;
 import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.User;
+import com.example.todolist.service.CounterService;
 import com.example.todolist.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,9 +33,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final CounterService counterService;
+
     @GetMapping(path = "/user")
     @Operation(summary = "Get users", description = "Get list of users")
     public ResponseEntity<List<User>> getToDoUser() throws ObjectNotFoundException {
+        counterService.incrementCounter();
         List<User> users = userService.getToDoUser();
         if (users.isEmpty()) {
             throw new ObjectNotFoundException("Can't find all users");
@@ -45,12 +49,14 @@ public class UserController {
     @GetMapping(path = "/user/id/{id}")
     @Operation(summary = "Get user", description = "Get user by id")
     public ResponseEntity<User> getToDoUserById(@PathVariable final Integer id) throws ObjectNotFoundException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.getToDoUserById(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "user/name/{userName}")
     @Operation(summary = "Get user", description = "Get user by name")
     public ResponseEntity<User> getToDoUserByName(@PathVariable final String userName) throws ObjectNotFoundException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.getToDoUserByName(userName), HttpStatus.OK);
     }
 
@@ -58,12 +64,14 @@ public class UserController {
     @Operation(summary = "Get user", description = "Get user by task id")
     public ResponseEntity<List<User>> getToDoUsersWithTaskById(@PathVariable final Integer taskId)
             throws ObjectNotFoundException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.getUsersWithTaskById(taskId), HttpStatus.OK);
     }
 
     @PostMapping(path = "/user/add")
     @Operation(summary = "Add user")
     public ResponseEntity<User> addUser(@Validated @RequestBody final User toDoUser) throws ObjectExistException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.addUser(toDoUser), HttpStatus.CREATED);
     }
 
@@ -72,18 +80,21 @@ public class UserController {
     public ResponseEntity<User> addTaskByIdInUser(@PathVariable final String userName,
             @PathVariable final Integer taskId)
             throws BadRequestException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.addTaskInUserById(userName, taskId), HttpStatus.CREATED);
     }
 
     @DeleteMapping(path = "/user/delete/id/{id}")
     @Operation(summary = "Delete user", description = "Delete user by id")
     public ResponseEntity<User> deleteUserById(@PathVariable final Integer id) throws BadRequestException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping(path = "/user/deleteAll")
     @Operation(summary = "Delete user", description = "Delete all user")
     public ResponseEntity<HttpStatus> deleteAllUser() {
+        counterService.incrementCounter();
         userService.deleteAllUser();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -93,6 +104,7 @@ public class UserController {
     public ResponseEntity<User> deleteTaskInUserById(@PathVariable final Integer userId,
             @PathVariable final Integer taskId)
             throws BadRequestException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.deleteTaskByIdInUser(userId, taskId), HttpStatus.NO_CONTENT);
     }
 
@@ -100,6 +112,7 @@ public class UserController {
     @Operation(summary = "Delete group", description = "Delete group in user by id")
     public ResponseEntity<User> deleteGroupInUserById(@PathVariable final Integer userId)
             throws BadRequestException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.deleteGroupInUserByID(userId), HttpStatus.NO_CONTENT);
     }
 
@@ -108,13 +121,26 @@ public class UserController {
     public ResponseEntity<User> updateUserNameById(@PathVariable final Integer userId,
             @RequestBody final String newName)
             throws BadRequestException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.updateUserNameById(userId, newName), HttpStatus.OK);
     }
 
     @PostMapping(path = "/user/add/users")
     @Operation(summary = "Add users", description = "Add list of users")
     public ResponseEntity<List<User>> addListOfUser(@RequestBody final List<User> users) throws ObjectExistException {
+        counterService.incrementCounter();
         return new ResponseEntity<>(userService.addListOfUser(users), HttpStatus.CREATED);
+    }
+
+    @GetMapping(path = "/counter")
+    public ResponseEntity<Integer> getCounter() {
+        return new ResponseEntity<>(counterService.get(), HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/reset")
+    public ResponseEntity<HttpStatus> resetCounter() {
+        counterService.reset();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

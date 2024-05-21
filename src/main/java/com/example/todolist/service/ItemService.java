@@ -54,7 +54,7 @@ public class ItemService {
     }
 
     public Item getToDoItemById(final Integer id) throws ObjectNotFoundException {
-        Integer hash = Objects.hashCode(id);
+        Integer hash = Objects.hash(id);
         Optional<Item> item;
         if (cacheService.containsKey(hash)) {
             item = cacheService.get(hash);
@@ -62,11 +62,7 @@ public class ItemService {
             item = itemRepository.findById(id);
             cacheService.put(hash, item);
         }
-        if (item.isEmpty()) {
-            throw new ObjectNotFoundException(NOT_FOUND_MSG);
-        }
-
-        return item.get();
+        return item.orElseThrow(() -> new ObjectNotFoundException(NOT_FOUND_MSG));
     }
 
     public Item getToDoItemByName(final String taskName) throws ObjectNotFoundException {
@@ -96,7 +92,7 @@ public class ItemService {
         if (item.isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
-        Integer hash = Objects.hashCode(id);
+        Integer hash = Objects.hash(id);
         if (cacheService.containsKey(hash)) {
             cacheService.remove(hash);
         }

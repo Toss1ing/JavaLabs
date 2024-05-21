@@ -58,7 +58,7 @@ public class UserService {
     }
 
     public User getToDoUserById(final Integer id) throws ObjectNotFoundException {
-        Integer hash = Objects.hashCode(id);
+        Integer hash = Objects.hash(id);
         Optional<User> user;
         if (cacheService.containsKey(hash)) {
             user = cacheService.get(hash);
@@ -108,11 +108,8 @@ public class UserService {
         if (user.isPresent()) {
             throw new ObjectExistException(OBJECT_EXIST_MSG);
         }
-        if (toDoUser.getToDoItems() == null) {
-            toDoUser.setToDoItems(new ArrayList<>());
-        }
         Integer hash = Objects.hash(toDoUser.getId());
-        cacheService.put(hash, user);
+        cacheService.put(hash, Optional.of(toDoUser));
         return userRepository.save(toDoUser);
     }
 
@@ -165,10 +162,10 @@ public class UserService {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
         user.get().setLoginName(newName);
-        if (cacheService.containsKey(userId)) {
-            cacheService.remove(userId);
+        if (cacheService.containsKey(hash)) {
+            cacheService.remove(hash);
         }
-        cacheService.put(userId, user);
+        cacheService.put(hash, user);
         userRepository.save(user.get());
         return user.get();
     }

@@ -24,12 +24,16 @@ import com.example.todolist.exception.ObjectNotFoundException;
 import com.example.todolist.model.Group;
 import com.example.todolist.model.Item;
 import com.example.todolist.model.User;
+import com.example.todolist.service.CounterService;
 import com.example.todolist.service.UserService;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     @Mock
     private UserService userService;
+
+    @Mock
+    private CounterService counterService;
 
     @InjectMocks
     private UserController userController;
