@@ -73,7 +73,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void getAllUserGroupTest_Throw() throws ObjectNotFoundException {
+    void getAllUserGroupTest_Throw() {
         when(groupRepository.findAll()).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> groupService.getAllUserGroup());
@@ -103,7 +103,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void getUserGroupByIdTest_Throw() throws ObjectNotFoundException {
+    void getUserGroupByIdTest_Throw() {
         Integer hash = Objects.hash(1);
         when(cacheService.containsKey(hash)).thenReturn(false);
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
@@ -146,7 +146,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void deleteGroupByIdTest_Throw() throws BadRequestException {
+    void deleteGroupByIdTest_Throw() {
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> groupService.deleteGroupById(1));
@@ -200,7 +200,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void getGroupByUserIdTest_ThrowUserNotFound() throws ObjectNotFoundException {
+    void getGroupByUserIdTest_ThrowUserNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> groupService.getGroupByUserId(1));
@@ -208,7 +208,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void getGroupByUserIdTest_ThrowGroupNotFound() throws ObjectNotFoundException {
+    void getGroupByUserIdTest_ThrowGroupNotFound() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(groupRepository.findGroupByUserId(user.getId())).thenReturn(Optional.empty());
 
@@ -217,7 +217,7 @@ class GroupServiceTest {
     }
 
     @Test
-    void updateGroupNameByIdTest_Throw() throws BadRequestException {
+    void updateGroupNameByIdTest_Throw() {
         when(groupRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> groupService.updateGroupNameById(1, "asdf"));

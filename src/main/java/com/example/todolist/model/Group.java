@@ -1,10 +1,10 @@
 package com.example.todolist.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -22,7 +22,6 @@ import lombok.Data;
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Hidden
     private Integer id;
 
     @Schema(name = "Group name", example = "Family")
@@ -31,4 +30,17 @@ public class Group {
     @OneToMany(mappedBy = "userGroup", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<User> toDoUsers;
+
+    public Group() {
+        this.groupName = "";
+        this.toDoUsers = new ArrayList<>();
+    }
+
+    public Group(final String nameGroup, final List<User> toDoUsers) {
+        this.groupName = nameGroup;
+        if (toDoUsers.isEmpty()) {
+            this.toDoUsers = new ArrayList<>();
+        }
+        this.toDoUsers = toDoUsers;
+    }
 }

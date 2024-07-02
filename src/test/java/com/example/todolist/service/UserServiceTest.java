@@ -88,7 +88,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getToDoUserTest_Throw() throws ObjectNotFoundException {
+    void getToDoUserTest_Throw() {
         when(userRepository.findAll()).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUser());
@@ -118,7 +118,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getToDoUserByIdTest_Throw() throws ObjectNotFoundException {
+    void getToDoUserByIdTest_Throw() {
         Integer hash = Objects.hash(1);
         when(cacheService.containsKey(hash)).thenReturn(false);
         when(userRepository.findById(1)).thenReturn(Optional.empty());
@@ -136,7 +136,7 @@ class UserServiceTest {
     }
 
     @Test
-    void getToDoUserByName_Throw() throws ObjectNotFoundException {
+    void getToDoUserByName_Throw() {
         when(userRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> userService.getToDoUserByName("asdf"));
@@ -168,7 +168,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteUserById_Throw() throws BadRequestException {
+    void deleteUserById_Throw() {
         when(userRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteUserById(2));
@@ -187,7 +187,7 @@ class UserServiceTest {
     }
 
     @Test
-    void addUserTest_Throw() throws ObjectExistException {
+    void addUserTest_Throw() {
         when(userRepository.findByName(user.getLoginName())).thenReturn(Optional.of(user));
 
         assertThrows(ObjectExistException.class, () -> userService.addUser(user));
@@ -223,7 +223,7 @@ class UserServiceTest {
     }
 
     @Test
-    void addTaskInUserByIdTest_Throw() throws BadRequestException {
+    void addTaskInUserByIdTest_Throw() {
         when(userRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.addTaskInUserById("asdf", 123));
@@ -255,7 +255,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteTaskByIdInUserTest_Throw() throws BadRequestException {
+    void deleteTaskByIdInUserTest_Throw() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteTaskByIdInUser(1, 1));
@@ -287,7 +287,7 @@ class UserServiceTest {
     }
 
     @Test
-    void updateUserNameByIdTest_Throw() throws BadRequestException {
+    void updateUserNameByIdTest_Throw() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.updateUserNameById(1, "newName"));
@@ -337,7 +337,7 @@ class UserServiceTest {
     }
 
     @Test
-    void deleteGroupInUserByIdTest_Throw() throws BadRequestException {
+    void deleteGroupInUserByIdTest_Throw() {
         when(userRepository.findById(1)).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> userService.deleteGroupInUserByID(1));

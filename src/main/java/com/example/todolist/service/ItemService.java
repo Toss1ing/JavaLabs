@@ -116,7 +116,7 @@ public class ItemService {
         if (item.isEmpty()) {
             throw new BadRequestException(BAD_REQUEST_MSG);
         }
-        item.get().setComplete(true);
+        item.get().setComplete(!item.get().isComplete());
         item.get().setCompletionDate(Instant.now());
         if (cacheService.containsKey(hash)) {
             cacheService.remove(hash);
@@ -132,5 +132,19 @@ public class ItemService {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return listItemByWord;
+    }
+
+    public Item updateNameById(Integer id, String taskName) throws ObjectNotFoundException {
+        Optional<Item> item = itemRepository.findById(id);
+        if (item.isEmpty()) {
+            throw new ObjectNotFoundException(NOT_FOUND_MSG);
+        }
+        item.get().setNameTask(taskName);
+        Integer hash = Objects.hash(item.get().getId());
+        if (cacheService.containsKey(hash)) {
+            cacheService.remove(hash);
+        }
+        cacheService.put(hash, item);
+        return itemRepository.save(item.get());
     }
 }

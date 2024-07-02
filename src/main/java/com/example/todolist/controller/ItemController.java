@@ -78,6 +78,13 @@ public class ItemController {
         return new ResponseEntity<>(itemService.deleteToDoItemById(id), HttpStatus.NO_CONTENT);
     }
 
+    @PutMapping(path = "/item/new/id/{id}/name/{taskName}")
+    public ResponseEntity<Item> updateTaskNameById(@PathVariable final Integer id,
+            @PathVariable final String taskName) throws ObjectNotFoundException {
+        counterService.incrementCounter();
+        return new ResponseEntity<>(itemService.updateNameById(id, taskName), HttpStatus.OK);
+    }
+
     @DeleteMapping(path = "item/deleteAll")
     @Operation(summary = "Delete task", description = "Delete all task")
     public ResponseEntity<HttpStatus> deleteAllItems() {

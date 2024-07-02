@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +48,12 @@ public class GroupController {
         return new ResponseEntity<>(groupService.getUserGroupById(id), HttpStatus.OK);
     }
 
+    @GetMapping(path = "group/name/{groupName}")
+    public ResponseEntity<Group> getGroupByName(@PathVariable final String groupName) throws ObjectNotFoundException {
+        counterService.incrementCounter();
+        return new ResponseEntity<>(groupService.getGroupByName(groupName), HttpStatus.OK);
+    }
+
     @GetMapping(path = "group/user/id/{id}")
     @Operation(summary = "Get group", description = "Get group of user by user id")
     public ResponseEntity<Group> getGroupByUserId(@PathVariable final Integer id) throws ObjectNotFoundException {
@@ -58,16 +63,16 @@ public class GroupController {
 
     @PostMapping(path = "group/add")
     @Operation(summary = "Add group of user")
-    public ResponseEntity<Group> addGroup(@Validated @RequestBody final Group toDoUserGroup)
+    public ResponseEntity<Group> addGroup(@RequestBody final Group toDoUserGroup)
             throws ObjectExistException {
         counterService.incrementCounter();
         return new ResponseEntity<>(groupService.addUserGroup(toDoUserGroup), HttpStatus.CREATED);
     }
 
-    @PutMapping(path = "group/name/new/{id}")
+    @PutMapping(path = "group/name/new/{id}/{groupName}")
     @Operation(summary = "Update group of user")
     public ResponseEntity<Group> updateGroupNameById(@PathVariable final Integer id,
-            @Validated @RequestBody final String groupName) throws BadRequestException {
+            @PathVariable final String groupName) throws BadRequestException {
         counterService.incrementCounter();
         return new ResponseEntity<>(groupService.updateGroupNameById(id, groupName), HttpStatus.OK);
     }

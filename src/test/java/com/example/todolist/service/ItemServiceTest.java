@@ -65,7 +65,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void getToDoItemsTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemsTest_Throw() {
         when(itemRepository.findAll()).thenReturn(Arrays.asList());
 
         List<Item> result = itemRepository.findAll();
@@ -99,7 +99,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void getToDoItemByIdTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByIdTest_Throw() {
         when(itemRepository.findById(2)).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemById(2));
@@ -115,7 +115,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void getToDoItemByNameTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByNameTest_Throw() {
         when(itemRepository.findByName(any(String.class))).thenReturn(Optional.empty());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemByName("hello"));
@@ -156,7 +156,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void deleteToDoItemById_Throw() throws BadRequestException {
+    void deleteToDoItemById_Throw() {
         when(itemRepository.findById(any(Integer.class))).thenReturn(Optional.empty());
 
         assertThrows(BadRequestException.class, () -> itemService.deleteToDoItemById(1));
@@ -189,7 +189,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void completeTaskByIdTest_Throw() throws BadRequestException {
+    void completeTaskByIdTest_Throw() {
         Integer hash = Objects.hash(2);
         when(cacheService.containsKey(hash)).thenReturn(false);
         when(itemRepository.findById(2)).thenReturn(Optional.empty());
@@ -208,7 +208,7 @@ class ItemServiceTest {
     }
 
     @Test
-    void getToDoItemByWordTest_Throw() throws ObjectNotFoundException {
+    void getToDoItemByWordTest_Throw() {
         when(itemRepository.findByDescriptionTask(any(String.class))).thenReturn(Arrays.asList());
 
         assertThrows(ObjectNotFoundException.class, () -> itemService.getToDoItemByWord("asdf"));

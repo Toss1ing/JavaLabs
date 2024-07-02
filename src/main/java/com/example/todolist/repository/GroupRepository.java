@@ -12,7 +12,7 @@ import com.example.todolist.model.Group;
 @Repository
 public interface GroupRepository extends JpaRepository<Group, Integer> {
 
-    @Query("SELECT s FROM Group s WHERE s.groupName =: groupName")
+    @Query("SELECT s FROM Group s WHERE s.groupName=:groupName")
     Optional<Group> findByName(@Param("groupName") final String groupName);
 
     @Query("SELECT s FROM Group s JOIN s.toDoUsers t WHERE t.id=:userId")

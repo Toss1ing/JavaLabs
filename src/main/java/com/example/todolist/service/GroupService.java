@@ -2,7 +2,6 @@ package com.example.todolist.service;
 
 import static com.example.todolist.utilities.Constants.BAD_REQUEST_MSG;
 import static com.example.todolist.utilities.Constants.NOT_FOUND_MSG;
-import static com.example.todolist.utilities.Constants.OBJECT_EXIST_MSG;
 
 import java.util.List;
 import java.util.Objects;
@@ -72,10 +71,6 @@ public class GroupService {
     }
 
     public Group addUserGroup(final Group toDoUserGroup) throws ObjectExistException {
-        Optional<Group> userGroup = groupRepository.findByName(toDoUserGroup.getGroupName());
-        if (userGroup.isPresent()) {
-            throw new ObjectExistException(OBJECT_EXIST_MSG);
-        }
         return groupRepository.save(toDoUserGroup);
     }
 
@@ -128,5 +123,13 @@ public class GroupService {
             throw new ObjectNotFoundException(NOT_FOUND_MSG);
         }
         return userGroup.get();
+    }
+
+    public Group getGroupByName(final String nameGroup) throws ObjectNotFoundException {
+        Optional<Group> group = groupRepository.findByName(nameGroup);
+        if (group.isEmpty()) {
+            throw new ObjectNotFoundException(NOT_FOUND_MSG);
+        }
+        return group.get();
     }
 }
